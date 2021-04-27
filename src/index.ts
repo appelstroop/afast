@@ -74,40 +74,6 @@ async function promptForMissingOptions(options: any) {
 function asyncPipe(...fns: Function[]) {
   return (x?: any) => fns.reduce(async (y, fn) => fn(await y), x);
 }
-export async function cli(args: string[]) {
-  let options = parseArgumentsIntoOptions(args);
-
-  try {
-    const credentials = await keytar.findCredentials("gafas");
-    console.log("keytar creds", credentials);
-    const bla = new Cookie(credentials[0].password, "https://x3.nodum.io/");
-    jar.addCookie(bla);
-    const response = await fetch(jar, "https://x3.nodum.io/grid", {
-      referrerPolicy: "strict-origin-when-cross-origin",
-      body: null,
-      method: "GET",
-      mode: "cors",
-    });
-    //console.log(response.status);
-    const text = await response.text();
-    console.log(text);
-  } catch (err) {
-    console.log(err);
-  }
-
-  // options = await promptForMissingOptions(options);
-  //console.log(options);
-
-  const bla = asyncPipe(
-    askLoginQuestions,
-    authRequests,
-    emailRequest,
-    passwordRequest,
-    twoFAMethodRequest,
-    askForVerificationToken,
-    confirm2FA
-  )();
-}
 
 const askLoginQuestions = async (data: LoginData) => {
   const answers = await inquirer.prompt([
@@ -133,3 +99,47 @@ const askForVerificationToken = async (data: LoginData) => {
   ]);
   return { ...data, ...answers };
 };
+
+const loginPipe = asyncPipe(
+  askLoginQuestions,
+  authRequests,
+  emailRequest,
+  passwordRequest,
+  twoFAMethodRequest,
+  askForVerificationToken,
+  confirm2FA
+);
+export async function cli(args: string[]) {
+  let options = parseArgumentsIntoOptions(args);
+
+  //console.log("cookie", getCookie());
+
+  try {
+    const credentials = await keytar.findCredentials("gafas");
+    const bla = new Cookie(credentials[0].password, "https://x3.nodum.io/");
+    jar.addCookie(bla);
+  } catch (err) {
+    console.log(err);
+  }
+  const response = await fetch(jar, "https://x3.nodum.io/grid", {
+    referrerPolicy: "strict-origin-when-cross-origin",
+    body: null,
+    method: "GET",
+    mode: "cors",
+  });
+  //console.log(response.status);
+  const text = await response.text();
+  const idMatchGroup = text.match(/id *: '(.*)',/);
+  const secureMatchGroup = text.match(/secu *: '(.*)',/);
+  const id = idMatchGroup && idMatchGroup[1];
+  const secure = secureMatchGroup && secureMatchGroup[1];
+
+  if (!id || !secure) {
+    console.log("logging in");
+    loginPipe();
+  } else {
+    console.log("no need for login!");
+  }
+  // options = await promptForMissingOptions(options);
+  // console.log(options);
+}
