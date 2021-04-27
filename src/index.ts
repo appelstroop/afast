@@ -1,5 +1,6 @@
 import arg from "arg";
 import inquirer from "inquirer";
+import authRequests from "./login/authRequests";
 
 function parseArgumentsIntoOptions(rawArgs: string[]) {
   const args = arg(
@@ -62,6 +63,7 @@ async function promptForMissingOptions(options: any) {
 
 export async function cli(args: string[]) {
   let options = parseArgumentsIntoOptions(args);
-  options = await promptForMissingOptions(options);
-  console.log(options);
+  // options = await promptForMissingOptions(options);
+  //console.log(options);
+  await authRequests();
 }
