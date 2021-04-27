@@ -5,8 +5,12 @@ import loginRequests from "./login/authRequests";
 import confirm2FA from "./login/confirm2FA";
 import emailRequest from "./login/emailRequest";
 import passwordRequest from "./login/passwordRequest";
+import storeCookie from "./login/storeCookie";
 import twoFAMethodRequest from "./login/twoFAMethodRequest";
 import { LoginData } from "./types";
+import keytar from "keytar";
+import { fetch, Cookie } from "node-fetch-cookies";
+import { jar } from "./cookieJar";
 
 function parseArgumentsIntoOptions(rawArgs: string[]) {
   const args = arg(
@@ -72,6 +76,24 @@ function asyncPipe(...fns: Function[]) {
 }
 export async function cli(args: string[]) {
   let options = parseArgumentsIntoOptions(args);
+
+  try {
+    const credentials = await keytar.findCredentials("gafas");
+    console.log("keytar creds", credentials);
+    const bla = new Cookie(credentials[0].password, "https://x3.nodum.io/");
+    jar.addCookie(bla);
+    const response = await fetch(jar, "https://x3.nodum.io/grid", {
+      referrerPolicy: "strict-origin-when-cross-origin",
+      body: null,
+      method: "GET",
+      mode: "cors",
+    });
+    //console.log(response.status);
+    const text = await response.text();
+    console.log(text);
+  } catch (err) {
+    console.log(err);
+  }
 
   // options = await promptForMissingOptions(options);
   //console.log(options);

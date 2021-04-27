@@ -1,6 +1,7 @@
 import { LoginData } from "../types";
 import { fetch } from "node-fetch-cookies";
 import { jar } from "../cookieJar";
+import storeCookie from "./storeCookie";
 async function confirm2FA(data: LoginData) {
   console.log("LAST DATA", data);
   const { returnUrl, code, token } = data;
@@ -24,11 +25,12 @@ async function confirm2FA(data: LoginData) {
   );
   //   console.log(postCodeResponse);
   //   console.log(postCodeResponse.headers);
-  console.log(jar);
   const idp2Response = await fetch(
     jar,
     postCodeResponse.headers.get("Location")
   );
+
+  storeCookie(idp2Response);
 }
 
 export default confirm2FA;
