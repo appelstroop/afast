@@ -1,8 +1,9 @@
 import { fetch } from "node-fetch-cookies";
 import { jar } from "../cookieJar";
+import { LoginData } from "../types";
 import getVerificationToken from "./getVerificationToken";
 
-export default async function () {
+async function authRequests(data: LoginData) {
   const afasOnlineResponse: Response = await fetch(
     jar,
     "https://37432.afasinsite.nl/x3/timemanagement"
@@ -12,6 +13,9 @@ export default async function () {
     jar,
     afasOnlineResponse.url
   );
-  const { token, returnUrl } = await getVerificationToken(stsAuthorizeResponse);
-  console.log(token, returnUrl);
+  const tokens = await getVerificationToken(stsAuthorizeResponse);
+
+  return { ...data, ...tokens };
 }
+
+export default authRequests;

@@ -8,7 +8,7 @@ async function getVerificationToken(res: Response) {
   const returnUrl = parse(text)
     .querySelector('[name="ReturnUrl"]')
     .getAttribute("value");
-
+  if (!returnUrl || !token) throw new Error("Tokens could not be found");
   return { token, returnUrl };
 }
 
