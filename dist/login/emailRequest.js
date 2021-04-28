@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -45,9 +46,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
-import getVerificationToken from "./getVerificationToken";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var cookieJar_1 = require("../cookieJar");
+var getVerificationToken_1 = __importDefault(require("./getVerificationToken"));
 function emailRequest(data) {
     return __awaiter(this, void 0, void 0, function () {
         var returnUrl, email, token, emailResponse, tokens;
@@ -55,17 +59,16 @@ function emailRequest(data) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, email = data.email, token = data.token;
-                    return [4 /*yield*/, fetch(jar, "https://idp.afasonline.com/Account/Email", {
+                    return [4 /*yield*/, cookieJar_1.gFetch("https://idp.afasonline.com/Account/Email", {
                             headers: {
                                 "content-type": "application/x-www-form-urlencoded",
                             },
                             body: "ReturnUrl=" + encodeURIComponent(returnUrl) + "&Email=" + encodeURIComponent(email) + "&__RequestVerificationToken=" + encodeURIComponent(token),
                             method: "POST",
-                            mode: "cors",
                         })];
                 case 1:
                     emailResponse = _a.sent();
-                    return [4 /*yield*/, getVerificationToken(emailResponse)];
+                    return [4 /*yield*/, getVerificationToken_1.default(emailResponse)];
                 case 2:
                     tokens = _a.sent();
                     return [2 /*return*/, __assign(__assign({}, data), tokens)];
@@ -73,5 +76,5 @@ function emailRequest(data) {
         });
     });
 }
-export default emailRequest;
+exports.default = emailRequest;
 //# sourceMappingURL=emailRequest.js.map

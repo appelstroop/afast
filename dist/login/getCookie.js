@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,9 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import keytar from "keytar";
-import { jar } from "../cookieJar";
-import { Cookie } from "node-fetch-cookies";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var keytar_1 = __importDefault(require("keytar"));
+var cookieJar_1 = require("../cookieJar");
 function getCookie() {
     return __awaiter(this, void 0, void 0, function () {
         var cookie, credentials, err_1;
@@ -44,7 +48,7 @@ function getCookie() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, keytar.findCredentials("gafas")];
+                    return [4 /*yield*/, keytar_1.default.findCredentials("gafas")];
                 case 1:
                     credentials = _a.sent();
                     cookie = credentials[0].password;
@@ -53,11 +57,12 @@ function getCookie() {
                     err_1 = _a.sent();
                     return [3 /*break*/, 3];
                 case 3:
-                    jar.addCookie(new Cookie(cookie, "https://x3.nodum.io/"));
+                    if (cookie)
+                        cookieJar_1.jar.setCookie(cookie, "https://x3.nodum.io/");
                     return [2 /*return*/, cookie];
             }
         });
     });
 }
-export default getCookie;
+exports.default = getCookie;
 //# sourceMappingURL=getCookie.js.map

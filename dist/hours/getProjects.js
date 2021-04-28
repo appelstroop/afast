@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,8 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
+Object.defineProperty(exports, "__esModule", { value: true });
+var cookieJar_1 = require("../cookieJar");
 function getProjects(authData) {
     return __awaiter(this, void 0, void 0, function () {
         var id, secure, month, year, projectsResponse, projects;
@@ -45,7 +46,7 @@ function getProjects(authData) {
                     id = authData.id, secure = authData.secure;
                     month = new Date().getMonth() + 1;
                     year = new Date().getFullYear();
-                    return [4 /*yield*/, fetch(jar, "https://x3.nodum.io/json/geldig?employee=" + id + "&secure=" + secure + "&y=" + year + "&m=" + month)];
+                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/geldig?employee=" + id + "&secure=" + secure + "&y=" + year + "&m=" + month)];
                 case 1:
                     projectsResponse = _a.sent();
                     return [4 /*yield*/, projectsResponse.json()];
@@ -56,5 +57,5 @@ function getProjects(authData) {
         });
     });
 }
-export default getProjects;
+exports.default = getProjects;
 //# sourceMappingURL=getProjects.js.map

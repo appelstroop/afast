@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -45,21 +46,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
-import getVerificationToken from "./getVerificationToken";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+//import { fetch } from "node-fetch-cookies";
+var cookieJar_1 = require("../cookieJar");
+var getVerificationToken_1 = __importDefault(require("./getVerificationToken"));
 function authRequests(data) {
     return __awaiter(this, void 0, void 0, function () {
         var afasOnlineResponse, stsAuthorizeResponse, tokens;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch(jar, "https://37432.afasinsite.nl/x3/timemanagement")];
+                case 0: return [4 /*yield*/, cookieJar_1.gFetch("https://37432.afasinsite.nl/x3/timemanagement")];
                 case 1:
                     afasOnlineResponse = _a.sent();
-                    return [4 /*yield*/, fetch(jar, afasOnlineResponse.url)];
+                    return [4 /*yield*/, cookieJar_1.gFetch(afasOnlineResponse.url)];
                 case 2:
                     stsAuthorizeResponse = _a.sent();
-                    return [4 /*yield*/, getVerificationToken(stsAuthorizeResponse)];
+                    return [4 /*yield*/, getVerificationToken_1.default(stsAuthorizeResponse)];
                 case 3:
                     tokens = _a.sent();
                     return [2 /*return*/, __assign(__assign({}, data), tokens)];
@@ -67,5 +72,5 @@ function authRequests(data) {
         });
     });
 }
-export default authRequests;
+exports.default = authRequests;
 //# sourceMappingURL=authRequests.js.map

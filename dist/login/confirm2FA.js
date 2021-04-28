@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,9 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
-import storeCookie from "./storeCookie";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var cookieJar_1 = require("../cookieJar");
+var storeCookie_1 = __importDefault(require("./storeCookie"));
 function confirm2FA(data) {
     return __awaiter(this, void 0, void 0, function () {
         var returnUrl, code, token, postCodeResponse, idp2Response;
@@ -44,7 +48,7 @@ function confirm2FA(data) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, code = data.code, token = data.token;
-                    return [4 /*yield*/, fetch(jar, "https://idp.afasonline.com/Account/Confirm2Factor", {
+                    return [4 /*yield*/, cookieJar_1.gFetch("https://idp.afasonline.com/Account/Confirm2Factor", {
                             headers: {
                                 "content-type": "application/x-www-form-urlencoded",
                             },
@@ -54,14 +58,14 @@ function confirm2FA(data) {
                         })];
                 case 1:
                     postCodeResponse = _a.sent();
-                    return [4 /*yield*/, fetch(jar, postCodeResponse.headers.get("Location"))];
+                    return [4 /*yield*/, cookieJar_1.gFetch(postCodeResponse.headers.get("Location"))];
                 case 2:
                     idp2Response = _a.sent();
-                    storeCookie(idp2Response);
+                    storeCookie_1.default(idp2Response);
                     return [2 /*return*/];
             }
         });
     });
 }
-export default confirm2FA;
+exports.default = confirm2FA;
 //# sourceMappingURL=confirm2FA.js.map

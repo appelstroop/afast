@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,7 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { parse } from "node-html-parser";
+Object.defineProperty(exports, "__esModule", { value: true });
+var node_html_parser_1 = require("node-html-parser");
 function getVerificationToken(res) {
     return __awaiter(this, void 0, void 0, function () {
         var text, token, returnUrl;
@@ -43,10 +45,10 @@ function getVerificationToken(res) {
                 case 0: return [4 /*yield*/, res.text()];
                 case 1:
                     text = _a.sent();
-                    token = parse(text)
+                    token = node_html_parser_1.parse(text)
                         .querySelector('[name="__RequestVerificationToken"]')
                         .getAttribute("value");
-                    returnUrl = parse(text)
+                    returnUrl = node_html_parser_1.parse(text)
                         .querySelector('[name="ReturnUrl"]')
                         .getAttribute("value");
                     if (!returnUrl || !token)
@@ -56,5 +58,5 @@ function getVerificationToken(res) {
         });
     });
 }
-export default getVerificationToken;
+exports.default = getVerificationToken;
 //# sourceMappingURL=getVerificationToken.js.map

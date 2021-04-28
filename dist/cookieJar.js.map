@@ -1,1 +1,1 @@
-{"version":3,"file":"cookieJar.js","sourceRoot":"","sources":["../src/cookieJar.ts"],"names":[],"mappings":"AAAA,OAAO,EAAS,SAAS,EAAU,MAAM,oBAAoB,CAAC;AAE9D,IAAM,GAAG,GAAG,IAAI,SAAS,EAAE,CAAC;AAE5B,OAAO,EAAE,GAAG,EAAE,CAAC"}
+{"version":3,"file":"cookieJar.js","sourceRoot":"","sources":["../src/cookieJar.ts"],"names":[],"mappings":";;;;;;AAAA,0DAAmC;AACnC,8DAAiC;AACjC,IAAM,GAAG,GAAG,IAAI,sBAAK,CAAC,SAAS,EAAE,CAAC;AAKzB,kBAAG;AAHZ,uEAA4C;AAC5C,IAAM,MAAM,GAAG,oBAAK,CAAC,oBAAS,EAAE,GAAG,CAAC,CAAC;AAEvB,wBAAM"}

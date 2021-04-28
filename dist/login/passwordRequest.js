@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -45,8 +46,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
+Object.defineProperty(exports, "__esModule", { value: true });
+var cookieJar_1 = require("../cookieJar");
 function passwordRequest(data) {
     return __awaiter(this, void 0, void 0, function () {
         var returnUrl, email, token, password, passwordResponse;
@@ -54,13 +55,12 @@ function passwordRequest(data) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, email = data.email, token = data.token, password = data.password;
-                    return [4 /*yield*/, fetch(jar, "https://idp.afasonline.com/Account/Password", {
+                    return [4 /*yield*/, cookieJar_1.gFetch("https://idp.afasonline.com/Account/Password", {
                             headers: {
                                 "content-type": "application/x-www-form-urlencoded",
                             },
                             body: "ReturnUrl=" + encodeURIComponent(returnUrl) + "&Username=" + encodeURIComponent(email) + "&Password=" + encodeURIComponent(password) + "&__RequestVerificationToken=" + encodeURIComponent(token) + "&Captcha=False&Token=",
                             method: "POST",
-                            mode: "cors",
                             redirect: "manual",
                         })];
                 case 1:
@@ -70,5 +70,5 @@ function passwordRequest(data) {
         });
     });
 }
-export default passwordRequest;
+exports.default = passwordRequest;
 //# sourceMappingURL=passwordRequest.js.map

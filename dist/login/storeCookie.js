@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,29 +35,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import keytar from "keytar";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var cookieJar_1 = require("../cookieJar");
+var keytar_1 = __importDefault(require("keytar"));
 function storeCookie(res) {
     return __awaiter(this, void 0, void 0, function () {
         var cookie, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    cookie = res.headers.get("set-cookie");
-                    if (!cookie) return [3 /*break*/, 4];
-                    _a.label = 1;
+                case 0: return [4 /*yield*/, cookieJar_1.jar.getCookieString("https://x3.nodum.io")];
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, keytar.setPassword("gafas", "nodum", cookie)];
+                    cookie = _a.sent();
+                    if (!cookie) return [3 /*break*/, 5];
+                    _a.label = 2;
                 case 2:
-                    _a.sent();
-                    return [3 /*break*/, 4];
+                    _a.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, keytar_1.default.setPassword("gafas", "nodum", cookie)];
                 case 3:
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
                     err_1 = _a.sent();
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    console.log("keytar error", err_1);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });
 }
-export default storeCookie;
+exports.default = storeCookie;
 //# sourceMappingURL=storeCookie.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -45,9 +46,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { jar } from "../cookieJar";
-import { fetch } from "node-fetch-cookies";
-import getVerificationToken from "./getVerificationToken";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var cookieJar_1 = require("../cookieJar");
+var getVerificationToken_1 = __importDefault(require("./getVerificationToken"));
 function twoFAMethodRequest(data) {
     return __awaiter(this, void 0, void 0, function () {
         var twoFaLocation, method, toReplace, sendsmsResponse, tokens;
@@ -55,17 +59,16 @@ function twoFAMethodRequest(data) {
             switch (_a.label) {
                 case 0:
                     twoFaLocation = data.twoFaLocation, method = data.method;
-                    console.log("TWO FACTOR LOACTION", twoFaLocation);
                     if (method === "sms") {
                         toReplace = twoFaLocation.includes("AOLSmartphone")
                             ? "AOLSmartphone"
                             : "Smartphone";
                         twoFaLocation = twoFaLocation.replace(toReplace, "Sms");
                     }
-                    return [4 /*yield*/, fetch(jar, twoFaLocation)];
+                    return [4 /*yield*/, cookieJar_1.gFetch(twoFaLocation)];
                 case 1:
                     sendsmsResponse = _a.sent();
-                    return [4 /*yield*/, getVerificationToken(sendsmsResponse)];
+                    return [4 /*yield*/, getVerificationToken_1.default(sendsmsResponse)];
                 case 2:
                     tokens = _a.sent();
                     return [2 /*return*/, __assign(__assign({}, data), tokens)];
@@ -73,5 +76,5 @@ function twoFAMethodRequest(data) {
         });
     });
 }
-export default twoFAMethodRequest;
+exports.default = twoFAMethodRequest;
 //# sourceMappingURL=twoFAMethodRequest.js.map

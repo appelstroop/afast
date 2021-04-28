@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -45,36 +46,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import arg from "arg";
-import inquirer from "inquirer";
-import authRequests from "./login/authRequests";
-import confirm2FA from "./login/confirm2FA";
-import emailRequest from "./login/emailRequest";
-import passwordRequest from "./login/passwordRequest";
-import twoFAMethodRequest from "./login/twoFAMethodRequest";
-import { fetch } from "node-fetch-cookies";
-import { jar } from "./cookieJar";
-import getCookie from "./login/getCookie";
-import getSecureToken from "./hours/getSecureToken";
-import getProjects from "./hours/getProjects";
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cli = void 0;
+var arg_1 = __importDefault(require("arg"));
+var inquirer_1 = __importDefault(require("inquirer"));
+var authRequests_1 = __importDefault(require("./login/authRequests"));
+var confirm2FA_1 = __importDefault(require("./login/confirm2FA"));
+var emailRequest_1 = __importDefault(require("./login/emailRequest"));
+var passwordRequest_1 = __importDefault(require("./login/passwordRequest"));
+var twoFAMethodRequest_1 = __importDefault(require("./login/twoFAMethodRequest"));
+var cookieJar_1 = require("./cookieJar");
+var getCookie_1 = __importDefault(require("./login/getCookie"));
+var getSecureToken_1 = __importDefault(require("./hours/getSecureToken"));
+var getProjects_1 = __importDefault(require("./hours/getProjects"));
 function parseArgumentsIntoOptions(rawArgs) {
-    var args = arg({
+    var args = arg_1.default({
         "--git": Boolean,
         "--yes": Boolean,
         "--install": Boolean,
+        "--password": String,
+        "--email": String,
         "-g": "--git",
         "-y": "--yes",
         "-i": "--install",
+        "-p": "--password",
+        "-e": "--email",
     }, {
         argv: rawArgs.slice(2),
     });
-    console.log("ARGS", args);
     return {
         skipPrompts: args["--yes"] || false,
         git: args["--git"] || false,
         template: args._[0],
         runInstall: args["--install"] || false,
         login: args._[0] === "login" ? true : false,
+        password: args["--password"] || null,
+        email: args["--email"] || null,
     };
 }
 function promptForMissingOptions(options) {
@@ -105,7 +120,7 @@ function promptForMissingOptions(options) {
                             default: false,
                         });
                     }
-                    return [4 /*yield*/, inquirer.prompt(questions)];
+                    return [4 /*yield*/, inquirer_1.default.prompt(questions)];
                 case 1:
                     answers = _a.sent();
                     return [2 /*return*/, __assign(__assign({}, options), { template: options.template || answers.template, git: options.git || answers.git })];
@@ -129,32 +144,38 @@ function asyncPipe() {
     }); }); }, x); };
 }
 var askLoginQuestions = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var answers;
+    var questions, answers;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, inquirer.prompt([
-                    { name: "email", message: "What is your email?" },
-                    {
+            case 0:
+                questions = [];
+                if (!data.email) {
+                    questions.push({ name: "email", message: "What is your email?" });
+                }
+                if (!data.password) {
+                    questions.push({
                         name: "password",
                         message: "What is your password?",
                         type: "password",
                         mask: true,
-                    },
-                    {
-                        type: "list",
-                        name: "method",
-                        message: "How would you like to login?",
-                        choices: [
-                            { name: "SMS", value: "sms" },
-                            { name: "Pocket app (not yet supported)", value: "app" },
-                        ],
-                        default: "sms",
-                        loop: false,
-                    },
-                ])];
+                    });
+                }
+                return [4 /*yield*/, inquirer_1.default.prompt(__spreadArray(__spreadArray([], questions), [
+                        {
+                            type: "list",
+                            name: "method",
+                            message: "How would you like to login?",
+                            choices: [
+                                { name: "SMS", value: "sms" },
+                                { name: "Pocket app (not yet supported)", value: "app" },
+                            ],
+                            default: "sms",
+                            loop: false,
+                        },
+                    ]))];
             case 1:
                 answers = _a.sent();
-                return [2 /*return*/, answers];
+                return [2 /*return*/, __assign(__assign({}, data), answers)];
         }
     });
 }); };
@@ -162,7 +183,7 @@ var askForVerificationToken = function (data) { return __awaiter(void 0, void 0,
     var answers;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, inquirer.prompt([
+            case 0: return [4 /*yield*/, inquirer_1.default.prompt([
                     {
                         name: "code",
                         message: "Type the code you received:",
@@ -174,34 +195,34 @@ var askForVerificationToken = function (data) { return __awaiter(void 0, void 0,
         }
     });
 }); };
-var loginPipe = asyncPipe(askLoginQuestions, authRequests, emailRequest, passwordRequest, twoFAMethodRequest, askForVerificationToken, confirm2FA);
-export function cli(args) {
+var loginPipe = asyncPipe(askLoginQuestions, authRequests_1.default, emailRequest_1.default, passwordRequest_1.default, twoFAMethodRequest_1.default, askForVerificationToken, confirm2FA_1.default);
+function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var login, _a, id, secure, projects, _b, project, hours, today, day, month, year, json, bloeh;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var _a, login, email, password, _b, id, secure, projects, _c, project, hours, today, day, month, year, json, bloeh;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    login = parseArgumentsIntoOptions(args).login;
+                    _a = parseArgumentsIntoOptions(args), login = _a.login, email = _a.email, password = _a.password;
                     //if (login) await loginPipe();
-                    return [4 /*yield*/, getCookie()];
+                    return [4 /*yield*/, getCookie_1.default()];
                 case 1:
                     //if (login) await loginPipe();
-                    _c.sent();
-                    return [4 /*yield*/, getSecureToken()];
+                    _d.sent();
+                    return [4 /*yield*/, getSecureToken_1.default()];
                 case 2:
-                    _a = _c.sent(), id = _a.id, secure = _a.secure;
+                    _b = _d.sent(), id = _b.id, secure = _b.secure;
                     if (!(!id || !secure || login)) return [3 /*break*/, 4];
-                    console.log("logging in");
-                    return [4 /*yield*/, loginPipe()];
+                    console.log("logging in...");
+                    return [4 /*yield*/, loginPipe({ email: email, password: password })];
                 case 3:
-                    _c.sent();
+                    _d.sent();
                     console.log("You are logged in :)");
                     cli([]);
                     return [3 /*break*/, 8];
-                case 4: return [4 /*yield*/, getProjects({ id: id, secure: secure })];
+                case 4: return [4 /*yield*/, getProjects_1.default({ id: id, secure: secure })];
                 case 5:
-                    projects = _c.sent();
-                    return [4 /*yield*/, inquirer.prompt([
+                    projects = _d.sent();
+                    return [4 /*yield*/, inquirer_1.default.prompt([
                             {
                                 name: "project",
                                 type: "list",
@@ -214,7 +235,7 @@ export function cli(args) {
                             { name: "hours", type: "number" },
                         ])];
                 case 6:
-                    _b = _c.sent(), project = _b.project, hours = _b.hours;
+                    _c = _d.sent(), project = _c.project, hours = _c.hours;
                     today = new Date();
                     day = today.getDate();
                     month = new Date().getMonth() + 1;
@@ -240,20 +261,20 @@ export function cli(args) {
                             time: 8,
                         },
                     };
-                    return [4 /*yield*/, fetch(jar, "https://x3.nodum.io/json/update", {
+                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/update", {
                             headers: {
                                 "content-type": "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
                             },
                             body: "------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n" + json + "\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n",
                             method: "POST",
-                            mode: "cors",
                         })];
                 case 7:
-                    _c.sent();
-                    _c.label = 8;
+                    _d.sent();
+                    _d.label = 8;
                 case 8: return [2 /*return*/];
             }
         });
     });
 }
+exports.cli = cli;
 //# sourceMappingURL=index.js.map
