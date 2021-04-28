@@ -7,7 +7,7 @@ async function twoFAMethodRequest(data: LoginData) {
   let { twoFaLocation, method } = data;
   console.log("TWO FACTOR LOACTION", twoFaLocation);
   if (method === "sms") {
-    const toReplace = twoFaLocation?.includes("AOLSmartphone")
+    const toReplace = twoFaLocation!.includes("AOLSmartphone")
       ? "AOLSmartphone"
       : "Smartphone";
     twoFaLocation = twoFaLocation!.replace(toReplace, "Sms");
