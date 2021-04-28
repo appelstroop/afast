@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import keytar from "keytar";
-import Configstore from "configstore";
 function storeCookie(res) {
     return __awaiter(this, void 0, void 0, function () {
         var cookie, err_1;
@@ -53,8 +52,6 @@ function storeCookie(res) {
                     return [3 /*break*/, 4];
                 case 3:
                     err_1 = _a.sent();
-                    // if keytar doesnt work use config store
-                    new Configstore("gafas", { nodum: cookie });
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

@@ -11,7 +11,6 @@ import { LoginData } from "./types";
 import keytar from "keytar";
 import { fetch, Cookie } from "node-fetch-cookies";
 import { jar } from "./cookieJar";
-import Configstore from "configstore";
 import getCookie from "./login/getCookie";
 import getSecureToken from "./hours/getSecureToken";
 import getProjects from "./hours/getProjects";
