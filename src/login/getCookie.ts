@@ -1,17 +1,18 @@
+import Configstore from "configstore";
 import keytar from "keytar";
 import { jar } from "../cookieJar";
 
 async function getCookie() {
   let cookie;
   try {
-    const credentials = await keytar.findCredentials("gafas");
-
-    cookie = credentials[0].password;
+    cookie = await keytar.findPassword("gafas");
   } catch (err) {
+    const store = new Configstore("gafas");
+    cookie = store.get("nodum");
+    console.log("using store");
     // if keytar doesnt work use config store
-    // const store = new Configstore("gafas");
-    // cookie = store.get("nodum");
   }
+
   if (cookie) jar.setCookie(cookie, "https://x3.nodum.io/");
   return cookie;
 }
