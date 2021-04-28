@@ -1,13 +1,11 @@
 import { get } from "https";
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
+import { gFetch } from "../cookieJar";
 import { LoginData } from "../types";
 import getVerificationToken from "./getVerificationToken";
 
 async function emailRequest(data: LoginData) {
   const { returnUrl, email, token } = data;
-  const emailResponse = await fetch(
-    jar,
+  const emailResponse = await gFetch(
     "https://idp.afasonline.com/Account/Email",
     {
       headers: {
@@ -20,7 +18,6 @@ async function emailRequest(data: LoginData) {
         email!
       )}&__RequestVerificationToken=${encodeURIComponent(token)}`,
       method: "POST",
-      mode: "cors",
     }
   );
   const tokens = await getVerificationToken(emailResponse);

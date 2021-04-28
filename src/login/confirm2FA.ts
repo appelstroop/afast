@@ -1,12 +1,10 @@
 import { LoginData } from "../types";
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
+import { gFetch, jar } from "../cookieJar";
 import storeCookie from "./storeCookie";
 async function confirm2FA(data: LoginData) {
   const { returnUrl, code, token } = data;
 
-  const postCodeResponse = await fetch(
-    jar,
+  const postCodeResponse = await gFetch(
     "https://idp.afasonline.com/Account/Confirm2Factor",
     {
       headers: {
@@ -21,12 +19,7 @@ async function confirm2FA(data: LoginData) {
       redirect: "manual",
     }
   );
-  //   console.log(postCodeResponse);
-  //   console.log(postCodeResponse.headers);
-  const idp2Response = await fetch(
-    jar,
-    postCodeResponse.headers.get("Location")
-  );
+  const idp2Response = await gFetch(postCodeResponse.headers.get("Location")!);
 
   storeCookie(idp2Response);
 }

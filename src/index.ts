@@ -9,8 +9,7 @@ import storeCookie from "./login/storeCookie";
 import twoFAMethodRequest from "./login/twoFAMethodRequest";
 import { LoginData } from "./types";
 import keytar from "keytar";
-import { fetch, Cookie } from "node-fetch-cookies";
-import { jar } from "./cookieJar";
+import { gFetch, jar } from "./cookieJar";
 import getCookie from "./login/getCookie";
 import getSecureToken from "./hours/getSecureToken";
 import getProjects from "./hours/getProjects";
@@ -21,22 +20,27 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
       "--git": Boolean,
       "--yes": Boolean,
       "--install": Boolean,
+      "--password": String,
+      "--email": String,
       "-g": "--git",
       "-y": "--yes",
       "-i": "--install",
+      "-p": "--password",
+      "-e": "--email",
     },
     {
       argv: rawArgs.slice(2),
     }
   );
 
-  console.log("ARGS", args);
   return {
     skipPrompts: args["--yes"] || false,
     git: args["--git"] || false,
     template: args._[0],
     runInstall: args["--install"] || false,
     login: args._[0] === "login" ? true : false,
+    password: args["--password"] || null,
+    email: args["--email"] || null,
   };
 }
 
@@ -82,14 +86,21 @@ function asyncPipe(...fns: Function[]) {
 }
 
 const askLoginQuestions = async (data: LoginData) => {
-  const answers = await inquirer.prompt([
-    { name: "email", message: "What is your email?" },
-    {
+  let questions = [];
+  if (!data.email) {
+    questions.push({ name: "email", message: "What is your email?" });
+  }
+  if (!data.password) {
+    questions.push({
       name: "password",
       message: "What is your password?",
       type: "password",
       mask: true,
-    },
+    });
+  }
+  const answers = await inquirer.prompt([
+    ...questions,
+
     {
       type: "list",
       name: "method",
@@ -102,7 +113,7 @@ const askLoginQuestions = async (data: LoginData) => {
       loop: false,
     },
   ]);
-  return answers;
+  return { ...data, ...answers };
 };
 
 const askForVerificationToken = async (data: LoginData) => {
@@ -125,20 +136,18 @@ const loginPipe = asyncPipe(
   confirm2FA
 );
 export async function cli(args: string[]) {
-  const { login } = parseArgumentsIntoOptions(args);
+  const { login, email, password } = parseArgumentsIntoOptions(args);
   //if (login) await loginPipe();
   await getCookie();
 
   const { id, secure } = await getSecureToken();
 
   if (!id || !secure || login) {
-    console.log("logging in");
-    await loginPipe();
+    console.log("logging in...");
+    await loginPipe({ email, password });
     console.log("You are logged in :)");
     cli([]);
   } else {
-    //console.log("no need for login!");
-
     const projects = await getProjects({ id, secure });
 
     const { project, hours } = await inquirer.prompt([
@@ -182,7 +191,7 @@ export async function cli(args: string[]) {
       },
     };
 
-    await fetch(jar, "https://x3.nodum.io/json/update", {
+    await gFetch("https://x3.nodum.io/json/update", {
       headers: {
         "content-type":
           "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
@@ -190,7 +199,6 @@ export async function cli(args: string[]) {
 
       body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
       method: "POST",
-      mode: "cors",
     });
   }
   // options = await promptForMissingOptions(options);

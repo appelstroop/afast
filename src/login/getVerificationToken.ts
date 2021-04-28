@@ -1,3 +1,4 @@
+import { FetchError, Response } from "node-fetch";
 import { parse } from "node-html-parser";
 
 async function getVerificationToken(res: Response) {

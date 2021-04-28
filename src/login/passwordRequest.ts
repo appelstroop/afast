@@ -1,11 +1,9 @@
-import { fetch } from "node-fetch-cookies";
-import { jar } from "../cookieJar";
+import { gFetch } from "../cookieJar";
 import { LoginData } from "../types";
 
 async function passwordRequest(data: LoginData) {
   const { returnUrl, email, token, password } = data;
-  const passwordResponse = await fetch(
-    jar,
+  const passwordResponse = await gFetch(
     "https://idp.afasonline.com/Account/Password",
     {
       headers: {
@@ -20,7 +18,6 @@ async function passwordRequest(data: LoginData) {
         token
       )}&Captcha=False&Token=`,
       method: "POST",
-      mode: "cors",
       redirect: "manual",
     }
   );
