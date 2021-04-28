@@ -11,6 +11,10 @@ import { LoginData } from "./types";
 import keytar from "keytar";
 import { fetch, Cookie } from "node-fetch-cookies";
 import { jar } from "./cookieJar";
+import Configstore from "configstore";
+import getCookie from "./login/getCookie";
+import getSecureToken from "./hours/getSecureToken";
+import getProjects from "./hours/getProjects";
 
 function parseArgumentsIntoOptions(rawArgs: string[]) {
   const args = arg(
@@ -26,11 +30,14 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
       argv: rawArgs.slice(2),
     }
   );
+
+  console.log("ARGS", args);
   return {
     skipPrompts: args["--yes"] || false,
     git: args["--git"] || false,
     template: args._[0],
     runInstall: args["--install"] || false,
+    login: args._[0] === "login" ? true : false,
   };
 }
 
@@ -78,19 +85,28 @@ function asyncPipe(...fns: Function[]) {
 const askLoginQuestions = async (data: LoginData) => {
   const answers = await inquirer.prompt([
     { name: "email", message: "What is your email?" },
-    { name: "password", message: "What is your password?" },
     {
+      name: "password",
+      message: "What is your password?",
+      type: "password",
+      mask: true,
+    },
+    {
+      type: "list",
       name: "method",
       message: "How would you like to login?",
-      choices: ["Pocket app", "SMS"],
-      default: "SMS",
+      choices: [
+        { name: "SMS", value: "sms" },
+        { name: "Pocket app (not yet supported)", value: "app" },
+      ],
+      default: "sms",
+      loop: false,
     },
   ]);
   return answers;
 };
 
 const askForVerificationToken = async (data: LoginData) => {
-  console.log("DATA", data);
   const answers = await inquirer.prompt([
     {
       name: "code",
@@ -110,35 +126,73 @@ const loginPipe = asyncPipe(
   confirm2FA
 );
 export async function cli(args: string[]) {
-  let options = parseArgumentsIntoOptions(args);
+  const { login } = parseArgumentsIntoOptions(args);
+  //if (login) await loginPipe();
+  await getCookie();
 
-  //console.log("cookie", getCookie());
+  const { id, secure } = await getSecureToken();
 
-  try {
-    const credentials = await keytar.findCredentials("gafas");
-    const bla = new Cookie(credentials[0].password, "https://x3.nodum.io/");
-    jar.addCookie(bla);
-  } catch (err) {
-    console.log(err);
-  }
-  const response = await fetch(jar, "https://x3.nodum.io/grid", {
-    referrerPolicy: "strict-origin-when-cross-origin",
-    body: null,
-    method: "GET",
-    mode: "cors",
-  });
-  //console.log(response.status);
-  const text = await response.text();
-  const idMatchGroup = text.match(/id *: '(.*)',/);
-  const secureMatchGroup = text.match(/secu *: '(.*)',/);
-  const id = idMatchGroup && idMatchGroup[1];
-  const secure = secureMatchGroup && secureMatchGroup[1];
-
-  if (!id || !secure) {
+  if (!id || !secure || login) {
     console.log("logging in");
-    loginPipe();
+    await loginPipe();
+    console.log("You are logged in :)");
+    cli([]);
   } else {
-    console.log("no need for login!");
+    //console.log("no need for login!");
+
+    const projects = await getProjects({ id, secure });
+
+    const { project, hours } = await inquirer.prompt([
+      {
+        name: "project",
+        type: "list",
+        choices: projects.projects.map((p: any) => ({
+          name: p.name,
+          value: p.code,
+        })),
+        loop: false,
+      },
+      { name: "hours", type: "number" },
+    ]);
+
+    const today = new Date();
+    const day = today.getDate();
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
+
+    const json = `{\"eventType\":\"create\",\"moment\":{\"day\":${day},\"month\":\"${month}\",\"year\":\"${year}\"},\"user\":{\"name\":\"Jasper Hoving\",\"id\":\"${id}\",\"secure\":\"${secure}\",\"see\":\"false\"},\"project\":\"${project}\",\"wst\":\"100\",\"_lines\":[{\"desc\":\"\",\"time\":${hours}}]}`;
+
+    const bloeh = {
+      eventType: "create",
+      moment: {
+        day: 16,
+        month: "4",
+        year: "2021",
+      },
+      user: {
+        name: "Jasper Hoving",
+        id,
+        secure,
+        see: false,
+      },
+      project: "5115",
+      wst: "100",
+      _lines: {
+        desc: "",
+        time: 8,
+      },
+    };
+
+    await fetch(jar, "https://x3.nodum.io/json/update", {
+      headers: {
+        "content-type":
+          "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
+      },
+
+      body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
+      method: "POST",
+      mode: "cors",
+    });
   }
   // options = await promptForMissingOptions(options);
   // console.log(options);

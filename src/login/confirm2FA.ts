@@ -3,7 +3,6 @@ import { fetch } from "node-fetch-cookies";
 import { jar } from "../cookieJar";
 import storeCookie from "./storeCookie";
 async function confirm2FA(data: LoginData) {
-  console.log("LAST DATA", data);
   const { returnUrl, code, token } = data;
 
   const postCodeResponse = await fetch(
@@ -13,7 +12,6 @@ async function confirm2FA(data: LoginData) {
       headers: {
         "content-type": "application/x-www-form-urlencoded",
       },
-
       body: `EndPointSessionId=&LogonProcessId=&Method=Sms&LoginSessionId=&ReturnUrl=${encodeURIComponent(
         returnUrl
       )}&TwoFactorKey=&Code=${code}&__RequestVerificationToken=${encodeURIComponent(

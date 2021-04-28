@@ -3,7 +3,12 @@ export interface LoginData {
   returnUrl: string;
   email?: string;
   password?: string;
-  method?: "Pocket app" | "SMS";
+  method?: "app" | "sms";
   twoFaLocation?: string;
   code?: string;
+}
+
+export interface AuthData {
+  secure: string;
+  id: string;
 }
