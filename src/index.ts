@@ -22,7 +22,14 @@ import {
 import submitHours from "./hours/submitHours";
 
 function asyncPipe(...fns: Function[]) {
-  return (x?: any) => fns.reduce(async (y, fn) => fn(await y), x);
+  return (x?: any) =>
+    fns.reduce(
+      async (y, fn) =>
+        fn(await y).catch((err: any) => {
+          throw err;
+        }),
+      x
+    );
 }
 
 const loginPipe = asyncPipe(
@@ -52,16 +59,21 @@ var argv = yargs(process.argv.slice(2))
 export async function cli(args: string[]) {
   const { email, password, project, hours } = argv;
   const login = argv._[0] === "login";
+  try {
+    if (login) {
+      console.log("logging in...");
+      await loginPipe({ email, password });
+      console.log("You are logged in :)");
+    } else {
+      await getCookie();
 
-  if (login) {
-    console.log("logging in...");
-    await loginPipe({ email, password });
-    console.log("You are logged in :)");
-  } else {
-    await getCookie();
-
-    const { id, secure } = await getSecureToken();
-    if (!id || !secure) console.log("You are not logged in. Use afast login!");
-    else await hoursPipe({ id, secure, project, hours });
+      const { id, secure } = await getSecureToken();
+      if (!id || !secure)
+        console.log("You are not logged in. Use afast login!");
+      else await hoursPipe({ id, secure, project, hours });
+    }
+  } catch (err) {
+    // catch all async errors
+    console.error(err);
   }
 }

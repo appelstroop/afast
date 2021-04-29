@@ -10,6 +10,10 @@ async function getProjects(data: HoursData) {
   );
   const projectResponse: ProjectResponse = await projectsResponse.json();
 
+  if (data.project) {
+    if (!projectResponse.projects.map((p) => p.code).includes(data.project))
+      throw new Error("Project code doesn't exist");
+  }
   return { ...data, projects: projectResponse.projects };
 }
 

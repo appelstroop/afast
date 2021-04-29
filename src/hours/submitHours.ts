@@ -15,10 +15,10 @@ async function submitHours(data: HoursData) {
       "content-type":
         "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
     },
-
     body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
     method: "POST",
   });
+  // Crappy API, seems to always return 200 :(
   if (updateResponse.ok) console.log("Yeah 🚀");
 }
 
