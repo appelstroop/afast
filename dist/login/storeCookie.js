@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var cookieJar_1 = require("../cookieJar");
 var keytar_1 = __importDefault(require("keytar"));
+var configstore_1 = __importDefault(require("configstore"));
 function storeCookie(res) {
     return __awaiter(this, void 0, void 0, function () {
         var cookie, err_1;
@@ -53,13 +54,14 @@ function storeCookie(res) {
                     _a.label = 2;
                 case 2:
                     _a.trys.push([2, 4, , 5]);
-                    return [4 /*yield*/, keytar_1.default.setPassword("gafas", "nodum", cookie)];
+                    return [4 /*yield*/, keytar_1.default.setPassword("afast", "nodum", cookie)];
                 case 3:
                     _a.sent();
                     return [3 /*break*/, 5];
                 case 4:
                     err_1 = _a.sent();
                     console.log("keytar error", err_1);
+                    new configstore_1.default("afast", { nodum: cookie });
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }

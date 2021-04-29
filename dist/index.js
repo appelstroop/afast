@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,88 +35,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cli = void 0;
-var arg_1 = __importDefault(require("arg"));
-var inquirer_1 = __importDefault(require("inquirer"));
 var authRequests_1 = __importDefault(require("./login/authRequests"));
 var confirm2FA_1 = __importDefault(require("./login/confirm2FA"));
 var emailRequest_1 = __importDefault(require("./login/emailRequest"));
 var passwordRequest_1 = __importDefault(require("./login/passwordRequest"));
 var twoFAMethodRequest_1 = __importDefault(require("./login/twoFAMethodRequest"));
-var cookieJar_1 = require("./cookieJar");
 var getCookie_1 = __importDefault(require("./login/getCookie"));
 var getSecureToken_1 = __importDefault(require("./hours/getSecureToken"));
 var getProjects_1 = __importDefault(require("./hours/getProjects"));
-function parseArgumentsIntoOptions(rawArgs) {
-    var args = arg_1.default({
-        "--git": Boolean,
-        "--yes": Boolean,
-        "--install": Boolean,
-        "--password": String,
-        "--email": String,
-        "-g": "--git",
-        "-y": "--yes",
-        "-i": "--install",
-        "-p": "--password",
-        "-e": "--email",
-    }, {
-        argv: rawArgs.slice(2),
-    });
-    return {
-        skipPrompts: args["--yes"] || false,
-        git: args["--git"] || false,
-        template: args._[0],
-        runInstall: args["--install"] || false,
-        login: args._[0] === "login" ? true : false,
-        password: args["--password"] || null,
-        email: args["--email"] || null,
-    };
-}
-function promptForMissingOptions(options) {
-    return __awaiter(this, void 0, void 0, function () {
-        var defaultTemplate, questions, answers;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    defaultTemplate = "JavaScript";
-                    if (options.skipPrompts) {
-                        return [2 /*return*/, __assign(__assign({}, options), { template: options.template || defaultTemplate })];
-                    }
-                    questions = [];
-                    if (!options.template) {
-                        questions.push({
-                            type: "list",
-                            name: "template",
-                            message: "Please choose which project template to use",
-                            choices: ["JavaScript", "TypeScript"],
-                            default: defaultTemplate,
-                        });
-                    }
-                    if (!options.git) {
-                        questions.push({
-                            type: "confirm",
-                            name: "git",
-                            message: "Initialize a git repository?",
-                            default: false,
-                        });
-                    }
-                    return [4 /*yield*/, inquirer_1.default.prompt(questions)];
-                case 1:
-                    answers = _a.sent();
-                    return [2 /*return*/, __assign(__assign({}, options), { template: options.template || answers.template, git: options.git || answers.git })];
-            }
-        });
-    });
-}
+var yargs_1 = __importDefault(require("yargs"));
+var questions_1 = require("./questions");
+var submitHours_1 = __importDefault(require("./hours/submitHours"));
 function asyncPipe() {
     var _this = this;
     var fns = [];
@@ -143,135 +66,48 @@ function asyncPipe() {
         }
     }); }); }, x); };
 }
-var askLoginQuestions = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var questions, answers;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                questions = [];
-                if (!data.email) {
-                    questions.push({ name: "email", message: "What is your email?" });
-                }
-                if (!data.password) {
-                    questions.push({
-                        name: "password",
-                        message: "What is your password?",
-                        type: "password",
-                        mask: true,
-                    });
-                }
-                return [4 /*yield*/, inquirer_1.default.prompt(__spreadArray(__spreadArray([], questions), [
-                        {
-                            type: "list",
-                            name: "method",
-                            message: "How would you like to login?",
-                            choices: [
-                                { name: "SMS", value: "sms" },
-                                { name: "Pocket app (not yet supported)", value: "app" },
-                            ],
-                            default: "sms",
-                            loop: false,
-                        },
-                    ]))];
-            case 1:
-                answers = _a.sent();
-                return [2 /*return*/, __assign(__assign({}, data), answers)];
-        }
-    });
-}); };
-var askForVerificationToken = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var answers;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, inquirer_1.default.prompt([
-                    {
-                        name: "code",
-                        message: "Type the code you received:",
-                    },
-                ])];
-            case 1:
-                answers = _a.sent();
-                return [2 /*return*/, __assign(__assign({}, data), answers)];
-        }
-    });
-}); };
-var loginPipe = asyncPipe(askLoginQuestions, authRequests_1.default, emailRequest_1.default, passwordRequest_1.default, twoFAMethodRequest_1.default, askForVerificationToken, confirm2FA_1.default);
+var loginPipe = asyncPipe(questions_1.askLoginQuestions, authRequests_1.default, emailRequest_1.default, passwordRequest_1.default, twoFAMethodRequest_1.default, questions_1.askForVerificationToken, confirm2FA_1.default);
+var hoursPipe = asyncPipe(getProjects_1.default, questions_1.askForProjectAndHours, submitHours_1.default);
+var argv = yargs_1.default(process.argv.slice(2))
+    .command("login", "Login to afas (2FA)")
+    .alias("E", "email")
+    .alias("P", "password")
+    .alias("p", "project")
+    .alias("h", "hours")
+    .string(["h", "p", "E", "P"])
+    .describe("E", "Email adress")
+    .describe("P", "Password for x3")
+    .describe("p", "the project code")
+    .describe("h", "hours to write today").argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, login, email, password, _b, id, secure, projects, _c, project, hours, today, day, month, year, json, bloeh;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var email, password, project, hours, login, _a, id, secure;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a = parseArgumentsIntoOptions(args), login = _a.login, email = _a.email, password = _a.password;
-                    //if (login) await loginPipe();
-                    return [4 /*yield*/, getCookie_1.default()];
-                case 1:
-                    //if (login) await loginPipe();
-                    _d.sent();
-                    return [4 /*yield*/, getSecureToken_1.default()];
-                case 2:
-                    _b = _d.sent(), id = _b.id, secure = _b.secure;
-                    if (!(!id || !secure || login)) return [3 /*break*/, 4];
+                    email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
+                    login = argv._[0] === "login";
+                    if (!login) return [3 /*break*/, 2];
                     console.log("logging in...");
                     return [4 /*yield*/, loginPipe({ email: email, password: password })];
-                case 3:
-                    _d.sent();
+                case 1:
+                    _b.sent();
                     console.log("You are logged in :)");
-                    cli([]);
-                    return [3 /*break*/, 8];
-                case 4: return [4 /*yield*/, getProjects_1.default({ id: id, secure: secure })];
-                case 5:
-                    projects = _d.sent();
-                    return [4 /*yield*/, inquirer_1.default.prompt([
-                            {
-                                name: "project",
-                                type: "list",
-                                choices: projects.projects.map(function (p) { return ({
-                                    name: p.name,
-                                    value: p.code,
-                                }); }),
-                                loop: false,
-                            },
-                            { name: "hours", type: "number" },
-                        ])];
+                    return [3 /*break*/, 7];
+                case 2: return [4 /*yield*/, getCookie_1.default()];
+                case 3:
+                    _b.sent();
+                    return [4 /*yield*/, getSecureToken_1.default()];
+                case 4:
+                    _a = _b.sent(), id = _a.id, secure = _a.secure;
+                    if (!(!id || !secure)) return [3 /*break*/, 5];
+                    console.log("You are not logged in. Use afast login!");
+                    return [3 /*break*/, 7];
+                case 5: return [4 /*yield*/, hoursPipe({ id: id, secure: secure, project: project, hours: hours })];
                 case 6:
-                    _c = _d.sent(), project = _c.project, hours = _c.hours;
-                    today = new Date();
-                    day = today.getDate();
-                    month = new Date().getMonth() + 1;
-                    year = new Date().getFullYear();
-                    json = "{\"eventType\":\"create\",\"moment\":{\"day\":" + day + ",\"month\":\"" + month + "\",\"year\":\"" + year + "\"},\"user\":{\"name\":\"Jasper Hoving\",\"id\":\"" + id + "\",\"secure\":\"" + secure + "\",\"see\":\"false\"},\"project\":\"" + project + "\",\"wst\":\"100\",\"_lines\":[{\"desc\":\"\",\"time\":" + hours + "}]}";
-                    bloeh = {
-                        eventType: "create",
-                        moment: {
-                            day: 16,
-                            month: "4",
-                            year: "2021",
-                        },
-                        user: {
-                            name: "Jasper Hoving",
-                            id: id,
-                            secure: secure,
-                            see: false,
-                        },
-                        project: "5115",
-                        wst: "100",
-                        _lines: {
-                            desc: "",
-                            time: 8,
-                        },
-                    };
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/update", {
-                            headers: {
-                                "content-type": "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
-                            },
-                            body: "------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n" + json + "\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n",
-                            method: "POST",
-                        })];
-                case 7:
-                    _d.sent();
-                    _d.label = 8;
-                case 8: return [2 /*return*/];
+                    _b.sent();
+                    _b.label = 7;
+                case 7: return [2 /*return*/];
             }
         });
     });

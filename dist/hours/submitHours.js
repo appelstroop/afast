@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -48,25 +37,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var cookieJar_1 = require("../cookieJar");
-function getProjects(data) {
+function submitHours(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, secure, month, year, projectsResponse, projectResponse;
+        var id, secure, project, hours, today, day, month, year, json, updateResponse;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    id = data.id, secure = data.secure;
+                    id = data.id, secure = data.secure, project = data.project, hours = data.hours;
+                    today = new Date();
+                    day = today.getDate();
                     month = new Date().getMonth() + 1;
                     year = new Date().getFullYear();
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/geldig?employee=" + id + "&secure=" + secure + "&y=" + year + "&m=" + month)];
+                    json = "{\"eventType\":\"update\",\"moment\":{\"day\":" + day + ",\"month\":\"" + month + "\",\"year\":\"" + year + "\"},\"user\":{\"id\":\"" + id + "\",\"secure\":\"" + secure + "\",\"see\":\"false\"},\"project\":\"" + project + "\",\"wst\":\"100\",\"_lines\":[{\"desc\":\"\",\"time\":" + hours + "}]}";
+                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/update", {
+                            headers: {
+                                "content-type": "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
+                            },
+                            body: "------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n" + json + "\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n",
+                            method: "POST",
+                        })];
                 case 1:
-                    projectsResponse = _a.sent();
-                    return [4 /*yield*/, projectsResponse.json()];
-                case 2:
-                    projectResponse = _a.sent();
-                    return [2 /*return*/, __assign(__assign({}, data), { projects: projectResponse.projects })];
+                    updateResponse = _a.sent();
+                    if (updateResponse.ok)
+                        console.log("Yeah 🚀");
+                    return [2 /*return*/];
             }
         });
     });
 }
-exports.default = getProjects;
-//# sourceMappingURL=getProjects.js.map
+exports.default = submitHours;
+//# sourceMappingURL=submitHours.js.map

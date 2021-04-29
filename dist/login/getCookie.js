@@ -39,22 +39,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var configstore_1 = __importDefault(require("configstore"));
 var keytar_1 = __importDefault(require("keytar"));
 var cookieJar_1 = require("../cookieJar");
 function getCookie() {
     return __awaiter(this, void 0, void 0, function () {
-        var cookie, credentials, err_1;
+        var cookie, err_1, store;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, keytar_1.default.findCredentials("gafas")];
+                    return [4 /*yield*/, keytar_1.default.findPassword("afast")];
                 case 1:
-                    credentials = _a.sent();
-                    cookie = credentials[0].password;
+                    cookie = _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
                     err_1 = _a.sent();
+                    store = new configstore_1.default("afast");
+                    cookie = store.get("nodum");
+                    console.log("using store");
                     return [3 /*break*/, 3];
                 case 3:
                     if (cookie)
