@@ -61,7 +61,7 @@ export async function cli(args: string[]) {
     await getCookie();
 
     const { id, secure } = await getSecureToken();
-    if (!id || !secure) console.log("you are not logged in. Use gafas login!");
+    if (!id || !secure) console.log("you are not logged in. Use afast login!");
     await hoursPipe({ id, secure, project, hours });
   }
 }

@@ -1,10 +1,10 @@
 {
-  "name": "@appelstroop/gafas",
+  "name": "@appelstroop/afast",
   "version": "0.5.0",
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "gafas": "bin/gafas"
+    "afast": "bin/afast"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

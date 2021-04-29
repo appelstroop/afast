@@ -7,10 +7,10 @@ async function storeCookie(res: Response) {
 
   if (cookie) {
     try {
-      await keytar.setPassword("gafas", "nodum", cookie);
+      await keytar.setPassword("afast", "nodum", cookie);
     } catch (err) {
       console.log("keytar error", err);
-      new Configstore("gafas", { nodum: cookie });
+      new Configstore("afast", { nodum: cookie });
       // if keytar doesnt work use config store
     }
   }

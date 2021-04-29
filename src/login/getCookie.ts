@@ -5,9 +5,9 @@ import { jar } from "../cookieJar";
 async function getCookie() {
   let cookie;
   try {
-    cookie = await keytar.findPassword("gafas");
+    cookie = await keytar.findPassword("afast");
   } catch (err) {
-    const store = new Configstore("gafas");
+    const store = new Configstore("afast");
     cookie = store.get("nodum");
     console.log("using store");
     // if keytar doesnt work use config store
