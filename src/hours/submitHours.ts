@@ -10,7 +10,7 @@ async function submitHours(data: HoursData) {
 
   const json = `{\"eventType\":\"update\",\"moment\":{\"day\":${day},\"month\":\"${month}\",\"year\":\"${year}\"},\"user\":{\"id\":\"${id}\",\"secure\":\"${secure}\",\"see\":\"false\"},\"project\":\"${project}\",\"wst\":\"100\",\"_lines\":[{\"desc\":\"\",\"time\":${hours}}]}`;
 
-  await gFetch("https://x3.nodum.io/json/update", {
+  const updateResponse = await gFetch("https://x3.nodum.io/json/update", {
     headers: {
       "content-type":
         "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
@@ -19,6 +19,7 @@ async function submitHours(data: HoursData) {
     body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
     method: "POST",
   });
+  if (updateResponse.ok) console.log("Yeah 🚀");
 }
 
 export default submitHours;

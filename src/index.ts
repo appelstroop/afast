@@ -38,26 +38,30 @@ const loginPipe = asyncPipe(
 const hoursPipe = asyncPipe(getProjects, askForProjectAndHours, submitHours);
 
 var argv = yargs(process.argv.slice(2))
-  .command("login", "reboot login")
-  .alias("e", "email")
-  .alias("p", "password")
-  .string(["e", "p"])
-  .describe("e", "Email adress")
-  .describe("p", "Password for x3").argv;
+  .command("login", "Login to afas (2FA)")
+  .alias("E", "email")
+  .alias("P", "password")
+  .alias("p", "project")
+  .alias("h", "hours")
+  .string(["h", "p", "E", "P"])
+  .describe("E", "Email adress")
+  .describe("P", "Password for x3")
+  .describe("p", "the project code")
+  .describe("h", "hours to write today").argv;
 
 export async function cli(args: string[]) {
-  const { email, password } = argv;
+  const { email, password, project, hours } = argv;
   const login = argv._[0] === "login";
-  await getCookie();
 
-  const { id, secure } = await getSecureToken();
-
-  if (!id || !secure || login) {
+  if (login) {
     console.log("logging in...");
     await loginPipe({ email, password });
     console.log("You are logged in :)");
-    cli([]);
   } else {
-    await hoursPipe({ id, secure });
+    await getCookie();
+
+    const { id, secure } = await getSecureToken();
+    if (!id || !secure) console.log("you are not logged in. Use gafas login!");
+    await hoursPipe({ id, secure, project, hours });
   }
 }

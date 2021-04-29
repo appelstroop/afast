@@ -1,4 +1,4 @@
-import { HoursData } from "../types";
+import { HoursData, ProjectResponse } from "../types";
 import { gFetch } from "../cookieJar";
 
 async function getProjects(data: HoursData) {
@@ -8,8 +8,9 @@ async function getProjects(data: HoursData) {
   const projectsResponse = await gFetch(
     `https://x3.nodum.io/json/geldig?employee=${id}&secure=${secure}&y=${year}&m=${month}`
   );
-  const projects = await projectsResponse.json();
-  return { ...data, ...projects };
+  const projectResponse: ProjectResponse = await projectsResponse.json();
+
+  return { ...data, projects: projectResponse.projects };
 }
 
 export default getProjects;

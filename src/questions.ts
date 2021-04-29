@@ -43,17 +43,18 @@ export const askForVerificationToken = async (data: LoginData) => {
 };
 
 export const askForProjectAndHours = async (data: HoursData) => {
-  const answers = await inquirer.prompt([
-    {
+  let questions = [];
+  if (!data.project)
+    questions.push({
       name: "project",
       type: "list",
-      choices: data.projects!.map((p: any) => ({
-        name: p.name,
+      choices: data.projects!.map((p) => ({
+        name: `${p.name} (${p.code}) `,
         value: p.code,
       })),
       loop: false,
-    },
-    { name: "hours", type: "number" },
-  ]);
+    });
+  if (!data.hours) questions.push({ name: "hours", type: "number" });
+  const answers = await inquirer.prompt(questions);
   return { ...data, ...answers };
 };
