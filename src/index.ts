@@ -13,118 +13,17 @@ import { gFetch, jar } from "./cookieJar";
 import getCookie from "./login/getCookie";
 import getSecureToken from "./hours/getSecureToken";
 import getProjects from "./hours/getProjects";
-
-function parseArgumentsIntoOptions(rawArgs: string[]) {
-  const args = arg(
-    {
-      "--git": Boolean,
-      "--yes": Boolean,
-      "--install": Boolean,
-      "--password": String,
-      "--email": String,
-      "-g": "--git",
-      "-y": "--yes",
-      "-i": "--install",
-      "-p": "--password",
-      "-e": "--email",
-    },
-    {
-      argv: rawArgs.slice(2),
-    }
-  );
-
-  return {
-    skipPrompts: args["--yes"] || false,
-    git: args["--git"] || false,
-    template: args._[0],
-    runInstall: args["--install"] || false,
-    login: args._[0] === "login" ? true : false,
-    password: args["--password"] || null,
-    email: args["--email"] || null,
-  };
-}
-
-async function promptForMissingOptions(options: any) {
-  const defaultTemplate = "JavaScript";
-  if (options.skipPrompts) {
-    return {
-      ...options,
-      template: options.template || defaultTemplate,
-    };
-  }
-
-  const questions = [];
-  if (!options.template) {
-    questions.push({
-      type: "list",
-      name: "template",
-      message: "Please choose which project template to use",
-      choices: ["JavaScript", "TypeScript"],
-      default: defaultTemplate,
-    });
-  }
-
-  if (!options.git) {
-    questions.push({
-      type: "confirm",
-      name: "git",
-      message: "Initialize a git repository?",
-      default: false,
-    });
-  }
-
-  const answers = await inquirer.prompt(questions);
-  return {
-    ...options,
-    template: options.template || answers.template,
-    git: options.git || answers.git,
-  };
-}
+import yargs from "yargs";
+import {
+  askForProjectAndHours,
+  askForVerificationToken,
+  askLoginQuestions,
+} from "./questions";
+import submitHours from "./hours/submitHours";
 
 function asyncPipe(...fns: Function[]) {
   return (x?: any) => fns.reduce(async (y, fn) => fn(await y), x);
 }
-
-const askLoginQuestions = async (data: LoginData) => {
-  let questions = [];
-  if (!data.email) {
-    questions.push({ name: "email", message: "What is your email?" });
-  }
-  if (!data.password) {
-    questions.push({
-      name: "password",
-      message: "What is your password?",
-      type: "password",
-      mask: true,
-    });
-  }
-  const answers = await inquirer.prompt([
-    ...questions,
-
-    {
-      type: "list",
-      name: "method",
-      message: "How would you like to login?",
-      choices: [
-        { name: "SMS", value: "sms" },
-        { name: "Pocket app (not yet supported)", value: "app" },
-      ],
-      default: "sms",
-      loop: false,
-    },
-  ]);
-  return { ...data, ...answers };
-};
-
-const askForVerificationToken = async (data: LoginData) => {
-  const answers = await inquirer.prompt([
-    {
-      name: "code",
-      message: "Type the code you received:",
-    },
-  ]);
-  return { ...data, ...answers };
-};
 
 const loginPipe = asyncPipe(
   askLoginQuestions,
@@ -135,9 +34,20 @@ const loginPipe = asyncPipe(
   askForVerificationToken,
   confirm2FA
 );
+
+const hoursPipe = asyncPipe(getProjects, askForProjectAndHours, submitHours);
+
+var argv = yargs(process.argv.slice(2))
+  .command("login", "reboot login")
+  .alias("e", "email")
+  .alias("p", "password")
+  .string(["e", "p"])
+  .describe("e", "Email adress")
+  .describe("p", "Password for x3").argv;
+
 export async function cli(args: string[]) {
-  const { login, email, password } = parseArgumentsIntoOptions(args);
-  //if (login) await loginPipe();
+  const { email, password } = argv;
+  const login = argv._[0] === "login";
   await getCookie();
 
   const { id, secure } = await getSecureToken();
@@ -148,59 +58,6 @@ export async function cli(args: string[]) {
     console.log("You are logged in :)");
     cli([]);
   } else {
-    const projects = await getProjects({ id, secure });
-
-    const { project, hours } = await inquirer.prompt([
-      {
-        name: "project",
-        type: "list",
-        choices: projects.projects.map((p: any) => ({
-          name: p.name,
-          value: p.code,
-        })),
-        loop: false,
-      },
-      { name: "hours", type: "number" },
-    ]);
-
-    const today = new Date();
-    const day = today.getDate();
-    const month = new Date().getMonth() + 1;
-    const year = new Date().getFullYear();
-
-    const json = `{\"eventType\":\"create\",\"moment\":{\"day\":${day},\"month\":\"${month}\",\"year\":\"${year}\"},\"user\":{\"name\":\"Jasper Hoving\",\"id\":\"${id}\",\"secure\":\"${secure}\",\"see\":\"false\"},\"project\":\"${project}\",\"wst\":\"100\",\"_lines\":[{\"desc\":\"\",\"time\":${hours}}]}`;
-
-    const bloeh = {
-      eventType: "create",
-      moment: {
-        day: 16,
-        month: "4",
-        year: "2021",
-      },
-      user: {
-        name: "Jasper Hoving",
-        id,
-        secure,
-        see: false,
-      },
-      project: "5115",
-      wst: "100",
-      _lines: {
-        desc: "",
-        time: 8,
-      },
-    };
-
-    await gFetch("https://x3.nodum.io/json/update", {
-      headers: {
-        "content-type":
-          "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
-      },
-
-      body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
-      method: "POST",
-    });
+    await hoursPipe({ id, secure });
   }
-  // options = await promptForMissingOptions(options);
-  // console.log(options);
 }

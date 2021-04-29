@@ -8,7 +8,12 @@ export interface LoginData {
   code?: string;
 }
 
-export interface AuthData {
+export interface HoursData {
   secure: string;
   id: string;
+
+  projects: any[];
+
+  project?: string;
+  hours?: string;
 }
