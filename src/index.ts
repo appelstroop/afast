@@ -22,14 +22,7 @@ import {
 import submitHours from "./hours/submitHours";
 
 function asyncPipe(...fns: Function[]) {
-  return (x?: any) =>
-    fns.reduce(
-      async (y, fn) =>
-        fn(await y).catch((err: any) => {
-          throw err;
-        }),
-      x
-    );
+  return (x?: any) => fns.reduce(async (y, fn) => fn(await y), x);
 }
 
 const loginPipe = asyncPipe(
