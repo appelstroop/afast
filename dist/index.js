@@ -81,33 +81,42 @@ var argv = yargs_1.default(process.argv.slice(2))
     .describe("h", "hours to write today").argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, project, hours, login, _a, id, secure;
+        var email, password, project, hours, login, _a, id, secure, err_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
                     login = argv._[0] === "login";
-                    if (!login) return [3 /*break*/, 2];
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 9, , 10]);
+                    if (!login) return [3 /*break*/, 3];
                     console.log("logging in...");
                     return [4 /*yield*/, loginPipe({ email: email, password: password })];
-                case 1:
+                case 2:
                     _b.sent();
                     console.log("You are logged in :)");
-                    return [3 /*break*/, 7];
-                case 2: return [4 /*yield*/, getCookie_1.default()];
-                case 3:
+                    return [3 /*break*/, 8];
+                case 3: return [4 /*yield*/, getCookie_1.default()];
+                case 4:
                     _b.sent();
                     return [4 /*yield*/, getSecureToken_1.default()];
-                case 4:
+                case 5:
                     _a = _b.sent(), id = _a.id, secure = _a.secure;
-                    if (!(!id || !secure)) return [3 /*break*/, 5];
+                    if (!(!id || !secure)) return [3 /*break*/, 6];
                     console.log("You are not logged in. Use afast login!");
-                    return [3 /*break*/, 7];
-                case 5: return [4 /*yield*/, hoursPipe({ id: id, secure: secure, project: project, hours: hours })];
-                case 6:
+                    return [3 /*break*/, 8];
+                case 6: return [4 /*yield*/, hoursPipe({ id: id, secure: secure, project: project, hours: hours })];
+                case 7:
                     _b.sent();
-                    _b.label = 7;
-                case 7: return [2 /*return*/];
+                    _b.label = 8;
+                case 8: return [3 /*break*/, 10];
+                case 9:
+                    err_1 = _b.sent();
+                    // catch all async errors
+                    console.error(err_1);
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/];
             }
         });
     });

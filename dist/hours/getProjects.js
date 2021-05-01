@@ -63,6 +63,10 @@ function getProjects(data) {
                     return [4 /*yield*/, projectsResponse.json()];
                 case 2:
                     projectResponse = _a.sent();
+                    if (data.project) {
+                        if (!projectResponse.projects.map(function (p) { return p.code; }).includes(data.project))
+                            throw new Error("Project code doesn't exist");
+                    }
                     return [2 /*return*/, __assign(__assign({}, data), { projects: projectResponse.projects })];
             }
         });

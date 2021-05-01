@@ -58,6 +58,7 @@ function submitHours(data) {
                         })];
                 case 1:
                     updateResponse = _a.sent();
+                    // Crappy API, seems to always return 200 :(
                     if (updateResponse.ok)
                         console.log("Yeah 🚀");
                     return [2 /*return*/];
