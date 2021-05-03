@@ -39,28 +39,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cookieJar_1 = require("../cookieJar");
 function submitHours(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, secure, project, hours, today, day, month, year, json, updateResponse;
+        var id, secure, projectCode, project, hours, description, today, day, month, year, json, updateResponse;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    id = data.id, secure = data.secure, project = data.project, hours = data.hours;
+                    id = data.id, secure = data.secure, projectCode = data.projectCode, project = data.project, hours = data.hours, description = data.description;
                     today = new Date();
                     day = today.getDate();
                     month = new Date().getMonth() + 1;
                     year = new Date().getFullYear();
-                    json = "{\"eventType\":\"update\",\"moment\":{\"day\":" + day + ",\"month\":\"" + month + "\",\"year\":\"" + year + "\"},\"user\":{\"id\":\"" + id + "\",\"secure\":\"" + secure + "\",\"see\":\"false\"},\"project\":\"" + project + "\",\"wst\":\"100\",\"_lines\":[{\"desc\":\"\",\"time\":" + hours + "}]}";
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/update", {
+                    json = "{\"eventType\":\"update\",\"moment\":{\"day\":" + day + ",\"month\":\"" + month + "\",\"year\":\"" + year + "\"},\"user\":{\"id\":\"" + id + "\",\"secure\":\"" + secure + "\",\"see\":\"false\"},\"project\":\"" + projectCode + "\",\"wst\":\"" + project.wsts[0].code + "\",\"_lines\":[{\"desc\":\"" + description + "\",\"time\":" + hours + "}]}";
+                    return [4 /*yield*/, cookieJar_1.gFetch('https://x3.nodum.io/json/update', {
                             headers: {
-                                "content-type": "multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV",
+                                'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV',
                             },
                             body: "------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n" + json + "\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n",
-                            method: "POST",
-                        })];
+                            method: 'POST',
+                        })
+                        // Crappy API, seems to always return 200 :(
+                    ];
                 case 1:
                     updateResponse = _a.sent();
                     // Crappy API, seems to always return 200 :(
                     if (updateResponse.ok)
-                        console.log("Yeah 🚀");
+                        console.log('Yeah 🚀');
                     return [2 /*return*/];
             }
         });

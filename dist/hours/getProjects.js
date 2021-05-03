@@ -47,10 +47,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sortProjects = void 0;
 var cookieJar_1 = require("../cookieJar");
 function getProjects(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, secure, month, year, projectsResponse, projectResponse;
+        var id, secure, month, year, projectsResponse, projectResponse, projects;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -63,14 +64,20 @@ function getProjects(data) {
                     return [4 /*yield*/, projectsResponse.json()];
                 case 2:
                     projectResponse = _a.sent();
-                    if (data.project) {
-                        if (!projectResponse.projects.map(function (p) { return p.code; }).includes(data.project))
-                            throw new Error("Project code doesn't exist");
-                    }
-                    return [2 /*return*/, __assign(__assign({}, data), { projects: projectResponse.projects })];
+                    projects = projectResponse.projects
+                        .map(function (p) {
+                        p.billable = p.billable === 'true';
+                        return p;
+                    })
+                        .sort(exports.sortProjects);
+                    return [2 /*return*/, __assign(__assign({}, data), { projects: projects })];
             }
         });
     });
 }
 exports.default = getProjects;
+var sortProjects = function (a, b) {
+    return a.billable === b.billable ? 0 : a.billable ? -1 : 1;
+};
+exports.sortProjects = sortProjects;
 //# sourceMappingURL=getProjects.js.map

@@ -51,6 +51,7 @@ var getProjects_1 = __importDefault(require("./hours/getProjects"));
 var yargs_1 = __importDefault(require("yargs"));
 var questions_1 = require("./questions");
 var submitHours_1 = __importDefault(require("./hours/submitHours"));
+var findProject_1 = __importDefault(require("./hours/findProject"));
 function asyncPipe() {
     var _this = this;
     var fns = [];
@@ -67,18 +68,18 @@ function asyncPipe() {
     }); }); }, x); };
 }
 var loginPipe = asyncPipe(questions_1.askLoginQuestions, authRequests_1.default, emailRequest_1.default, passwordRequest_1.default, twoFAMethodRequest_1.default, questions_1.askForVerificationToken, confirm2FA_1.default);
-var hoursPipe = asyncPipe(getProjects_1.default, questions_1.askForProjectAndHours, submitHours_1.default);
+var hoursPipe = asyncPipe(getProjects_1.default, questions_1.askForProjectAndHours, findProject_1.default, questions_1.askForDescription, submitHours_1.default);
 var argv = yargs_1.default(process.argv.slice(2))
-    .command("login", "Login to afas (2FA)")
-    .alias("E", "email")
-    .alias("P", "password")
-    .alias("p", "project")
-    .alias("h", "hours")
-    .string(["h", "p", "E", "P"])
-    .describe("E", "Email adress")
-    .describe("P", "Password for x3")
-    .describe("p", "the project code")
-    .describe("h", "hours to write today").argv;
+    .command('login', 'Login to afas (2FA)')
+    .alias('E', 'email')
+    .alias('P', 'password')
+    .alias('p', 'project')
+    .alias('h', 'hours')
+    .string(['h', 'p', 'E', 'P'])
+    .describe('E', 'Email adress')
+    .describe('P', 'Password for x3')
+    .describe('p', 'the project code')
+    .describe('h', 'hours to write today').argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
         var email, password, project, hours, login, _a, id, secure, err_1;
@@ -86,16 +87,16 @@ function cli(args) {
             switch (_b.label) {
                 case 0:
                     email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
-                    login = argv._[0] === "login";
+                    login = argv._[0] === 'login';
                     _b.label = 1;
                 case 1:
                     _b.trys.push([1, 9, , 10]);
                     if (!login) return [3 /*break*/, 3];
-                    console.log("logging in...");
+                    console.log('logging in...');
                     return [4 /*yield*/, loginPipe({ email: email, password: password })];
                 case 2:
                     _b.sent();
-                    console.log("You are logged in :)");
+                    console.log('You are logged in :)');
                     return [3 /*break*/, 8];
                 case 3: return [4 /*yield*/, getCookie_1.default()];
                 case 4:
@@ -104,9 +105,9 @@ function cli(args) {
                 case 5:
                     _a = _b.sent(), id = _a.id, secure = _a.secure;
                     if (!(!id || !secure)) return [3 /*break*/, 6];
-                    console.log("You are not logged in. Use afast login!");
+                    console.log('You are not logged in. Use afast login!');
                     return [3 /*break*/, 8];
-                case 6: return [4 /*yield*/, hoursPipe({ id: id, secure: secure, project: project, hours: hours })];
+                case 6: return [4 /*yield*/, hoursPipe({ id: id, secure: secure, projectCode: project, hours: hours })];
                 case 7:
                     _b.sent();
                     _b.label = 8;

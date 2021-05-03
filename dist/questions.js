@@ -55,7 +55,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.askForProjectAndHours = exports.askForVerificationToken = exports.askLoginQuestions = void 0;
+exports.askForDescription = exports.askForProjectAndHours = exports.askForVerificationToken = exports.askLoginQuestions = void 0;
 var inquirer_1 = __importDefault(require("inquirer"));
 var askLoginQuestions = function (data) { return __awaiter(void 0, void 0, void 0, function () {
     var questions, answers;
@@ -64,26 +64,26 @@ var askLoginQuestions = function (data) { return __awaiter(void 0, void 0, void 
             case 0:
                 questions = [];
                 if (!data.email) {
-                    questions.push({ name: "email", message: "What is your email?" });
+                    questions.push({ name: 'email', message: 'What is your email?' });
                 }
                 if (!data.password) {
                     questions.push({
-                        name: "password",
-                        message: "What is your password?",
-                        type: "password",
+                        name: 'password',
+                        message: 'What is your password?',
+                        type: 'password',
                         mask: true,
                     });
                 }
                 return [4 /*yield*/, inquirer_1.default.prompt(__spreadArray(__spreadArray([], questions), [
                         {
-                            type: "list",
-                            name: "method",
-                            message: "How would you like to login?",
+                            type: 'list',
+                            name: 'method',
+                            message: 'How would you like to login?',
                             choices: [
-                                { name: "SMS", value: "sms" },
-                                { name: "Pocket app (not yet supported)", value: "app" },
+                                { name: 'SMS', value: 'sms' },
+                                { name: 'Pocket app (not yet supported)', value: 'app' },
                             ],
-                            default: "sms",
+                            default: 'sms',
                             loop: false,
                         },
                     ]))];
@@ -100,8 +100,8 @@ var askForVerificationToken = function (data) { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0: return [4 /*yield*/, inquirer_1.default.prompt([
                     {
-                        name: "code",
-                        message: "Type the code you received:",
+                        name: 'code',
+                        message: 'Type the code you received:',
                     },
                 ])];
             case 1:
@@ -117,18 +117,20 @@ var askForProjectAndHours = function (data) { return __awaiter(void 0, void 0, v
         switch (_a.label) {
             case 0:
                 questions = [];
-                if (!data.project)
+                if (!data.projectCode) {
                     questions.push({
-                        name: "project",
-                        type: "list",
+                        name: 'projectCode',
+                        message: 'Selelect project:',
+                        type: 'list',
                         choices: data.projects.map(function (p) { return ({
                             name: p.name + " (" + p.code + ") ",
                             value: p.code,
                         }); }),
                         loop: false,
                     });
+                }
                 if (!data.hours)
-                    questions.push({ name: "hours", type: "number" });
+                    questions.push({ name: 'hours', type: 'number' });
                 return [4 /*yield*/, inquirer_1.default.prompt(questions)];
             case 1:
                 answers = _a.sent();
@@ -137,4 +139,24 @@ var askForProjectAndHours = function (data) { return __awaiter(void 0, void 0, v
     });
 }); };
 exports.askForProjectAndHours = askForProjectAndHours;
+var askForDescription = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var questions, answers;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                questions = [];
+                if (data.project.internal) {
+                    questions.push({
+                        name: 'description',
+                        message: 'This is an internal project. Write a description:',
+                    });
+                }
+                return [4 /*yield*/, inquirer_1.default.prompt(questions)];
+            case 1:
+                answers = _a.sent();
+                return [2 /*return*/, __assign(__assign({}, data), answers)];
+        }
+    });
+}); };
+exports.askForDescription = askForDescription;
 //# sourceMappingURL=questions.js.map

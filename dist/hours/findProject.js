@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,36 +46,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var configstore_1 = __importDefault(require("configstore"));
-var keytar_1 = __importDefault(require("keytar"));
-var cookieJar_1 = require("../cookieJar");
-function getCookie() {
+function findProject(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var cookie, err_1, store;
+        var project;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, keytar_1.default.findPassword('afast')];
-                case 1:
-                    cookie = _a.sent();
-                    return [3 /*break*/, 3];
-                case 2:
-                    err_1 = _a.sent();
-                    store = new configstore_1.default('afast');
-                    cookie = store.get('nodum');
-                    return [3 /*break*/, 3];
-                case 3:
-                    if (cookie)
-                        cookieJar_1.jar.setCookie(cookie, 'https://x3.nodum.io/');
-                    return [2 /*return*/, cookie];
-            }
+            project = data.projects.find(function (p) { return p.code === data.projectCode; });
+            if (!project)
+                throw new Error("Project code doesn't exist");
+            return [2 /*return*/, __assign(__assign({}, data), { project: project })];
         });
     });
 }
-exports.default = getCookie;
-//# sourceMappingURL=getCookie.js.map
+exports.default = findProject;
+//# sourceMappingURL=findProject.js.map
