@@ -32,6 +32,8 @@ const loginPipe = asyncPipe(
 )
 
 const hoursPipe = asyncPipe(
+  getCookie,
+  getSecureToken,
   getProjects,
   askForProjectAndHours,
   findProject,
@@ -49,7 +51,8 @@ var argv = yargs(process.argv.slice(2))
   .describe('E', 'Email adress')
   .describe('P', 'Password for x3')
   .describe('p', 'the project code')
-  .describe('h', 'hours to write today').argv
+  .describe('h', 'hours to write today')
+  .describe('verbose', 'verbose error logging').argv
 
 export async function cli(args: string[]) {
   const { email, password, project, hours } = argv
@@ -60,14 +63,14 @@ export async function cli(args: string[]) {
       await loginPipe({ email, password })
       console.log('You are logged in :)')
     } else {
-      await getCookie()
+      // await getCookie()
 
-      const { id, secure } = await getSecureToken()
-      if (!id || !secure) console.log('You are not logged in. Use afast login!')
-      else await hoursPipe({ id, secure, projectCode: project, hours })
+      // const { id, secure } = await getSecureToken()
+      // if (!id || !secure) console.log('You are not logged in. Use afast login!')
+      await hoursPipe({ projectCode: project, hours })
     }
   } catch (err) {
-    // catch all async errors
-    console.error(err)
+    // catch all async errors and just log them
+    argv.verbose ? console.error(err) : console.log(`Error: ${err.message}`)
   }
 }

@@ -58,7 +58,12 @@ export const askForProjectAndHours = async (data: HoursData) => {
     })
   }
 
-  if (!data.hours) questions.push({ name: 'hours', type: 'number' })
+  if (!data.hours)
+    questions.push({
+      name: 'hours',
+      type: 'number',
+      message: 'Working hours today',
+    })
   const answers = await inquirer.prompt(questions)
   return { ...data, ...answers }
 }

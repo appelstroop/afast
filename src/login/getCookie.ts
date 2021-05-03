@@ -1,8 +1,9 @@
 import Configstore from 'configstore'
 import keytar from 'keytar'
 import { jar } from '../cookieJar'
+import { HoursData } from '../types'
 
-async function getCookie() {
+async function getCookie(data: HoursData) {
   let cookie
   try {
     cookie = await keytar.findPassword('afast')
@@ -13,7 +14,7 @@ async function getCookie() {
   }
 
   if (cookie) jar.setCookie(cookie, 'https://x3.nodum.io/')
-  return cookie
+  return data
 }
 
 export default getCookie

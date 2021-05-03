@@ -10,7 +10,7 @@
     "test": "jest",
     "tsc": "tsc"
   },
-  "author": "",
+  "author": "J.Hoving",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.14.0",
