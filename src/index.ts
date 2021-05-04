@@ -47,6 +47,7 @@ var argv = yargs(process.argv.slice(2))
   .alias('P', 'password')
   .alias('p', 'project')
   .alias('h', 'hours')
+  .alias('v', 'version')
   .string(['h', 'p', 'E', 'P'])
   .describe('E', 'Email adress')
   .describe('P', 'Password for x3')
@@ -55,7 +56,11 @@ var argv = yargs(process.argv.slice(2))
   .describe('verbose', 'verbose error logging').argv
 
 export async function cli(args: string[]) {
-  const { email, password, project, hours } = argv
+  const { email, password, project, hours, version } = argv
+  if (version) {
+    console.log(process.env.npm_package_version)
+    return
+  }
   const login = argv._[0] === 'login'
   try {
     if (login) {
@@ -71,6 +76,7 @@ export async function cli(args: string[]) {
     }
   } catch (err) {
     // catch all async errors and just log them
-    argv.verbose ? console.error(err) : console.log(`Error: ${err.message}`)
+    if (argv.verbose) console.error(err)
+    else console.log(`Error: ${err.message}`)
   }
 }

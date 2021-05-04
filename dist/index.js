@@ -75,6 +75,7 @@ var argv = yargs_1.default(process.argv.slice(2))
     .alias('P', 'password')
     .alias('p', 'project')
     .alias('h', 'hours')
+    .alias('v', 'version')
     .string(['h', 'p', 'E', 'P'])
     .describe('E', 'Email adress')
     .describe('P', 'Password for x3')
@@ -83,11 +84,15 @@ var argv = yargs_1.default(process.argv.slice(2))
     .describe('verbose', 'verbose error logging').argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, project, hours, login, err_1;
+        var email, password, project, hours, version, login, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
+                    email = argv.email, password = argv.password, project = argv.project, hours = argv.hours, version = argv.version;
+                    if (version) {
+                        console.log(process.env.npm_package_version);
+                        return [2 /*return*/];
+                    }
                     login = argv._[0] === 'login';
                     _a.label = 1;
                 case 1:
