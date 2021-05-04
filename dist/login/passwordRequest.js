@@ -50,22 +50,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cookieJar_1 = require("../cookieJar");
 function passwordRequest(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var returnUrl, email, token, password, passwordResponse;
+        var returnUrl, email, token, password, passwordResponse, nextLocation;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, email = data.email, token = data.token, password = data.password;
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://idp.afasonline.com/Account/Password", {
+                    return [4 /*yield*/, cookieJar_1.gFetch('https://idp.afasonline.com/Account/Password', {
                             headers: {
-                                "content-type": "application/x-www-form-urlencoded",
+                                'content-type': 'application/x-www-form-urlencoded',
                             },
                             body: "ReturnUrl=" + encodeURIComponent(returnUrl) + "&Username=" + encodeURIComponent(email) + "&Password=" + encodeURIComponent(password) + "&__RequestVerificationToken=" + encodeURIComponent(token) + "&Captcha=False&Token=",
-                            method: "POST",
-                            redirect: "manual",
+                            method: 'POST',
+                            redirect: 'manual',
                         })];
                 case 1:
                     passwordResponse = _a.sent();
-                    return [2 /*return*/, __assign({ twoFaLocation: passwordResponse.headers.get("Location") }, data)];
+                    nextLocation = passwordResponse.headers.get('Location');
+                    if (!nextLocation)
+                        throw new Error('Email or password incorrect');
+                    return [2 /*return*/, __assign({ twoFaLocation: passwordResponse.headers.get('Location') }, data)];
             }
         });
     });

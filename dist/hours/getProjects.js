@@ -66,6 +66,7 @@ function getProjects(data) {
                     projectResponse = _a.sent();
                     projects = projectResponse.projects
                         .map(function (p) {
+                        // map to real boolean
                         p.billable = p.billable === 'true';
                         return p;
                     })

@@ -130,7 +130,11 @@ var askForProjectAndHours = function (data) { return __awaiter(void 0, void 0, v
                     });
                 }
                 if (!data.hours)
-                    questions.push({ name: 'hours', type: 'number' });
+                    questions.push({
+                        name: 'hours',
+                        type: 'number',
+                        message: 'Working hours today',
+                    });
                 return [4 /*yield*/, inquirer_1.default.prompt(questions)];
             case 1:
                 answers = _a.sent();

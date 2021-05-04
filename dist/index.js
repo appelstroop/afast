@@ -68,7 +68,7 @@ function asyncPipe() {
     }); }); }, x); };
 }
 var loginPipe = asyncPipe(questions_1.askLoginQuestions, authRequests_1.default, emailRequest_1.default, passwordRequest_1.default, twoFAMethodRequest_1.default, questions_1.askForVerificationToken, confirm2FA_1.default);
-var hoursPipe = asyncPipe(getProjects_1.default, questions_1.askForProjectAndHours, findProject_1.default, questions_1.askForDescription, submitHours_1.default);
+var hoursPipe = asyncPipe(getCookie_1.default, getSecureToken_1.default, getProjects_1.default, questions_1.askForProjectAndHours, findProject_1.default, questions_1.askForDescription, submitHours_1.default);
 var argv = yargs_1.default(process.argv.slice(2))
     .command('login', 'Login to afas (2FA)')
     .alias('E', 'email')
@@ -79,45 +79,44 @@ var argv = yargs_1.default(process.argv.slice(2))
     .describe('E', 'Email adress')
     .describe('P', 'Password for x3')
     .describe('p', 'the project code')
-    .describe('h', 'hours to write today').argv;
+    .describe('h', 'hours to write today')
+    .describe('verbose', 'verbose error logging').argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, project, hours, login, _a, id, secure, err_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var email, password, project, hours, login, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
                     login = argv._[0] === 'login';
-                    _b.label = 1;
+                    _a.label = 1;
                 case 1:
-                    _b.trys.push([1, 9, , 10]);
+                    _a.trys.push([1, 6, , 7]);
                     if (!login) return [3 /*break*/, 3];
                     console.log('logging in...');
                     return [4 /*yield*/, loginPipe({ email: email, password: password })];
                 case 2:
-                    _b.sent();
+                    _a.sent();
                     console.log('You are logged in :)');
-                    return [3 /*break*/, 8];
-                case 3: return [4 /*yield*/, getCookie_1.default()];
+                    return [3 /*break*/, 5];
+                case 3: 
+                // await getCookie()
+                // const { id, secure } = await getSecureToken()
+                // if (!id || !secure) console.log('You are not logged in. Use afast login!')
+                return [4 /*yield*/, hoursPipe({ projectCode: project, hours: hours })];
                 case 4:
-                    _b.sent();
-                    return [4 /*yield*/, getSecureToken_1.default()];
-                case 5:
-                    _a = _b.sent(), id = _a.id, secure = _a.secure;
-                    if (!(!id || !secure)) return [3 /*break*/, 6];
-                    console.log('You are not logged in. Use afast login!');
-                    return [3 /*break*/, 8];
-                case 6: return [4 /*yield*/, hoursPipe({ id: id, secure: secure, projectCode: project, hours: hours })];
-                case 7:
-                    _b.sent();
-                    _b.label = 8;
-                case 8: return [3 /*break*/, 10];
-                case 9:
-                    err_1 = _b.sent();
-                    // catch all async errors
-                    console.error(err_1);
-                    return [3 /*break*/, 10];
-                case 10: return [2 /*return*/];
+                    // await getCookie()
+                    // const { id, secure } = await getSecureToken()
+                    // if (!id || !secure) console.log('You are not logged in. Use afast login!')
+                    _a.sent();
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    err_1 = _a.sent();
+                    // catch all async errors and just log them
+                    argv.verbose ? console.error(err_1) : console.log("Error: " + err_1.message);
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     });
