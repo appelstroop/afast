@@ -11,6 +11,7 @@ async function getProjects(data: HoursData) {
   const projectResponse: ProjectResponse = await projectsResponse.json()
   const projects = projectResponse.projects
     .map((p) => {
+      // map to real boolean
       p.billable = p.billable === 'true'
       return p
     })
