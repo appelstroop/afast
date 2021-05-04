@@ -119,7 +119,10 @@ function cli(args) {
                 case 6:
                     err_1 = _a.sent();
                     // catch all async errors and just log them
-                    argv.verbose ? console.error(err_1) : console.log("Error: " + err_1.message);
+                    if (argv.verbose)
+                        console.error(err_1);
+                    else
+                        console.log("Error: " + err_1.message);
                     return [3 /*break*/, 7];
                 case 7: return [2 /*return*/];
             }
