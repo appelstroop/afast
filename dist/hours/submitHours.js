@@ -48,6 +48,7 @@ function submitHours(data) {
                     day = today.getDate();
                     month = new Date().getMonth() + 1;
                     year = new Date().getFullYear();
+                    console.log(project.wsts);
                     json = "{\"eventType\":\"update\",\"moment\":{\"day\":" + day + ",\"month\":\"" + month + "\",\"year\":\"" + year + "\"},\"user\":{\"id\":\"" + id + "\",\"secure\":\"" + secure + "\",\"see\":\"false\"},\"project\":\"" + projectCode + "\",\"wst\":\"" + project.wsts[0].code + "\",\"_lines\":[{\"desc\":\"" + description + "\",\"time\":" + hours + "}]}";
                     return [4 /*yield*/, cookieJar_1.gFetch('https://x3.nodum.io/json/update', {
                             headers: {
@@ -62,7 +63,7 @@ function submitHours(data) {
                     updateResponse = _a.sent();
                     // Crappy API, seems to always return 200 :(
                     if (updateResponse.ok)
-                        console.log('Yeah 🚀');
+                        console.log("Yeah \uD83D\uDE80 Set " + hours + " hours today for " + project.name + " ");
                     return [2 /*return*/];
             }
         });
