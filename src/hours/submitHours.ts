@@ -7,7 +7,6 @@ async function submitHours(data: HoursData) {
   const day = today.getDate()
   const month = new Date().getMonth() + 1
   const year = new Date().getFullYear()
-  console.log(project.wsts)
   const json = `{\"eventType\":\"update\",\"moment\":{\"day\":${day},\"month\":\"${month}\",\"year\":\"${year}\"},\"user\":{\"id\":\"${id}\",\"secure\":\"${secure}\",\"see\":\"false\"},\"project\":\"${projectCode}\",\"wst\":\"${project.wsts[0].code}\",\"_lines\":[{\"desc\":\"${description}\",\"time\":${hours}}]}`
 
   const updateResponse = await gFetch('https://x3.nodum.io/json/update', {
