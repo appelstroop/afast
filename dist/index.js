@@ -52,6 +52,8 @@ var yargs_1 = __importDefault(require("yargs"));
 var questions_1 = require("./questions");
 var submitHours_1 = __importDefault(require("./hours/submitHours"));
 var findProject_1 = __importDefault(require("./hours/findProject"));
+var checkReleases_1 = __importDefault(require("./git/checkReleases"));
+var package_json = require('../package.json');
 function asyncPipe() {
     var _this = this;
     var fns = [];
@@ -84,50 +86,53 @@ var argv = yargs_1.default(process.argv.slice(2))
     .describe('verbose', 'verbose error logging').argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, project, hours, version, login, err_1;
+        var email, password, project, hours, login, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    email = argv.email, password = argv.password, project = argv.project, hours = argv.hours, version = argv.version;
-                    if (version) {
-                        console.log(process.env.npm_package_version);
-                        return [2 /*return*/];
-                    }
-                    login = argv._[0] === 'login';
-                    _a.label = 1;
+                case 0: return [4 /*yield*/, checkReleases_1.default(getVersion())];
                 case 1:
-                    _a.trys.push([1, 6, , 7]);
-                    if (!login) return [3 /*break*/, 3];
-                    console.log('logging in...');
-                    return [4 /*yield*/, loginPipe({ email: email, password: password })];
+                    _a.sent();
+                    email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
+                    return [4 /*yield*/, getVersion()];
                 case 2:
                     _a.sent();
+                    login = argv._[0] === 'login';
+                    _a.label = 3;
+                case 3:
+                    _a.trys.push([3, 8, , 9]);
+                    if (!login) return [3 /*break*/, 5];
+                    console.log('logging in...');
+                    return [4 /*yield*/, loginPipe({ email: email, password: password })];
+                case 4:
+                    _a.sent();
                     console.log('You are logged in :)');
-                    return [3 /*break*/, 5];
-                case 3: 
+                    return [3 /*break*/, 7];
+                case 5: 
                 // await getCookie()
                 // const { id, secure } = await getSecureToken()
                 // if (!id || !secure) console.log('You are not logged in. Use afast login!')
                 return [4 /*yield*/, hoursPipe({ projectCode: project, hours: hours })];
-                case 4:
+                case 6:
                     // await getCookie()
                     // const { id, secure } = await getSecureToken()
                     // if (!id || !secure) console.log('You are not logged in. Use afast login!')
                     _a.sent();
-                    _a.label = 5;
-                case 5: return [3 /*break*/, 7];
-                case 6:
+                    _a.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     err_1 = _a.sent();
                     // catch all async errors and just log them
                     if (argv.verbose)
                         console.error(err_1);
                     else
                         console.log("Error: " + err_1.message);
-                    return [3 /*break*/, 7];
-                case 7: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     });
 }
 exports.cli = cli;
+// maybe there is a better way?
+var getVersion = function () { return package_json.version || ''; };
 //# sourceMappingURL=index.js.map

@@ -16,6 +16,8 @@ import {
 } from './questions'
 import submitHours from './hours/submitHours'
 import findProject from './hours/findProject'
+import checkReleases from './git/checkReleases'
+const package_json = require('../package.json')
 
 function asyncPipe(...fns: Function[]) {
   return (x?: any) => fns.reduce(async (y, fn) => fn(await y), x)
@@ -56,11 +58,10 @@ var argv = yargs(process.argv.slice(2))
   .describe('verbose', 'verbose error logging').argv
 
 export async function cli(args: string[]) {
-  const { email, password, project, hours, version } = argv
-  if (version) {
-    console.log(process.env.npm_package_version)
-    return
-  }
+  await checkReleases(getVersion())
+  const { email, password, project, hours } = argv
+
+  await getVersion()
   const login = argv._[0] === 'login'
   try {
     if (login) {
@@ -80,3 +81,6 @@ export async function cli(args: string[]) {
     else console.log(`Error: ${err.message}`)
   }
 }
+
+// maybe there is a better way?
+const getVersion = () => package_json.version || ''
