@@ -58,7 +58,11 @@ var argv = yargs(process.argv.slice(2))
   .describe('verbose', 'verbose error logging').argv
 
 export async function cli(args: string[]) {
-  await checkReleases(getVersion())
+  const updated = await checkReleases(getVersion())
+  if (updated) {
+    console.log('Update installed!')
+    return
+  }
   const { email, password, project, hours } = argv
 
   await getVersion()

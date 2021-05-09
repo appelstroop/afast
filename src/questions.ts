@@ -79,3 +79,14 @@ export const askForDescription = async (data: HoursData) => {
   const answers = await inquirer.prompt(questions)
   return { ...data, ...answers }
 }
+
+export const aksForUpdate = async () => {
+  const anwsers: { update: boolean } = await inquirer.prompt([
+    {
+      name: 'update',
+      type: 'confirm',
+      message: 'New version available, would you like to update?',
+    },
+  ])
+  return anwsers.update
+}

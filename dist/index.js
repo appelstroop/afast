@@ -86,12 +86,16 @@ var argv = yargs_1.default(process.argv.slice(2))
     .describe('verbose', 'verbose error logging').argv;
 function cli(args) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, project, hours, login, err_1;
+        var updated, email, password, project, hours, login, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, checkReleases_1.default(getVersion())];
                 case 1:
-                    _a.sent();
+                    updated = _a.sent();
+                    if (updated) {
+                        console.log('Update installed!');
+                        return [2 /*return*/];
+                    }
                     email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
                     return [4 /*yield*/, getVersion()];
                 case 2:

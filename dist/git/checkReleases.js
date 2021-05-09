@@ -39,16 +39,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exampleResponseJson = exports.checkReleases = void 0;
+exports.checkReleases = void 0;
 var cookieJar_1 = require("../cookieJar");
 var simple_git_1 = __importDefault(require("simple-git"));
 var compare_versions_1 = __importDefault(require("compare-versions"));
-function checkReleases(version, fetch, gitClient) {
+var questions_1 = require("../questions");
+var configstore_1 = __importDefault(require("configstore"));
+var moment_1 = __importDefault(require("moment"));
+function checkReleases(version, fetch, gitClient, aksForUpdate) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, resp, isNewer, options, git, result_1, err_1;
+        var config, lastChecked, result, resp, newestReleaseVersion, isNewer, options, wantsUpdate, git, result_1, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch('https://api.github.com/repos/appelstroop/afast/releases')];
+                case 0:
+                    config = new configstore_1.default('afast');
+                    lastChecked = config.get('lastChecked');
+                    if (!lastChecked)
+                        config.set('lastChecked', moment_1.default());
+                    if (moment_1.default().diff(lastChecked, 'days') < 5) {
+                        return [2 /*return*/, false];
+                    }
+                    config.set('lastChecked', moment_1.default());
+                    return [4 /*yield*/, fetch('https://api.github.com/repos/appelstroop/afast/releases')];
                 case 1:
                     resp = _a.sent();
                     if (!resp.ok) return [3 /*break*/, 3];
@@ -56,82 +68,44 @@ function checkReleases(version, fetch, gitClient) {
                 case 2:
                     result = _a.sent();
                     return [3 /*break*/, 4];
-                case 3:
-                    result = exports.exampleResponseJson;
-                    _a.label = 4;
+                case 3: return [2 /*return*/, false];
                 case 4:
-                    isNewer = compare_versions_1.default(result[0].tag_name, version);
+                    newestReleaseVersion = result[0] ? result[0].tag_name : '0';
+                    isNewer = compare_versions_1.default(newestReleaseVersion, version);
                     if (isNewer < 1)
-                        return [2 /*return*/];
+                        return [2 /*return*/, false];
                     options = {
                         baseDir: process.cwd(),
                         binary: 'git',
                         maxConcurrentProcesses: 6,
                     };
-                    git = gitClient(options);
-                    if (!result) return [3 /*break*/, 8];
-                    console.log('pulling...');
-                    _a.label = 5;
+                    return [4 /*yield*/, aksForUpdate()];
                 case 5:
-                    _a.trys.push([5, 7, , 8]);
-                    return [4 /*yield*/, git.pull()];
+                    wantsUpdate = _a.sent();
+                    if (!wantsUpdate)
+                        return [2 /*return*/, false];
+                    git = gitClient(options);
+                    if (!result) return [3 /*break*/, 9];
+                    _a.label = 6;
                 case 6:
-                    result_1 = _a.sent();
-                    console.log('git result', result_1);
-                    return [3 /*break*/, 8];
+                    _a.trys.push([6, 8, , 9]);
+                    return [4 /*yield*/, git.pull()];
                 case 7:
+                    result_1 = _a.sent();
+                    console.log(result_1);
+                    return [2 /*return*/, true];
+                case 8:
                     err_1 = _a.sent();
                     console.log(err_1);
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/, false];
             }
         });
     });
 }
 exports.checkReleases = checkReleases;
 var checkReleasesFactory = function (version) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    return [2 /*return*/, checkReleases(version, cookieJar_1.gFetch, simple_git_1.default)];
+    return [2 /*return*/, checkReleases(version, cookieJar_1.gFetch, simple_git_1.default, questions_1.aksForUpdate)];
 }); }); };
 exports.default = checkReleasesFactory;
-exports.exampleResponseJson = [
-    {
-        url: 'https://api.github.com/repos/appelstroop/afast/releases/42470648',
-        assets_url: 'https://api.github.com/repos/appelstroop/afast/releases/42470648/assets',
-        upload_url: 'https://uploads.github.com/repos/appelstroop/afast/releases/42470648/assets{?name,label}',
-        html_url: 'https://github.com/appelstroop/afast/releases/tag/0.5',
-        id: 42470648,
-        author: {
-            login: 'appelstroop',
-            id: 8784949,
-            node_id: 'MDQ6VXNlcjg3ODQ5NDk=',
-            avatar_url: 'https://avatars.githubusercontent.com/u/8784949?v=4',
-            gravatar_id: '',
-            url: 'https://api.github.com/users/appelstroop',
-            html_url: 'https://github.com/appelstroop',
-            followers_url: 'https://api.github.com/users/appelstroop/followers',
-            following_url: 'https://api.github.com/users/appelstroop/following{/other_user}',
-            gists_url: 'https://api.github.com/users/appelstroop/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/appelstroop/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/appelstroop/subscriptions',
-            organizations_url: 'https://api.github.com/users/appelstroop/orgs',
-            repos_url: 'https://api.github.com/users/appelstroop/repos',
-            events_url: 'https://api.github.com/users/appelstroop/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/appelstroop/received_events',
-            type: 'User',
-            site_admin: false,
-        },
-        node_id: 'MDc6UmVsZWFzZTQyNDcwNjQ4',
-        tag_name: '0.7',
-        target_commitish: 'main',
-        name: 'Version 0.5',
-        draft: false,
-        prerelease: false,
-        created_at: '2021-05-05T11:48:59Z',
-        published_at: '2021-05-05T11:50:08Z',
-        assets: [],
-        tarball_url: 'https://api.github.com/repos/appelstroop/afast/tarball/0.5',
-        zipball_url: 'https://api.github.com/repos/appelstroop/afast/zipball/0.5',
-        body: '',
-    },
-];
 //# sourceMappingURL=checkReleases.js.map
