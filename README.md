@@ -4,12 +4,10 @@ A cli to track your time in the Xebia x3/ afas environment. I wanted to see if I
 
 ## Installing
 
-Not on NPM so:
+Not on NPM so: 
 
 ```sh
-git clone https://github.com/appelstroop/afast
-cd afast
-npm link
+npm install -g https://github.com/appelstroop/afast
 ```
 
 ## Usage
