@@ -10,7 +10,7 @@ describe('GIT', () => {
     })
     const mockPull = jest.fn()
     const config = new Configstore('afast')
-    config.set('lastChecked', moment().subtract(6, 'days'))
+    config.set('lastChecked', moment().subtract(1, 'days'))
     const result = await checkReleases(
       '0.4.0',
       mockFetch as any,

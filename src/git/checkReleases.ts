@@ -15,13 +15,13 @@ export async function checkReleases(
   // TODO: shorten this function
 
   // check if needs upd3ate check ;)
-  // const config = new Configstore('afast')
-  // const lastChecked = config.get('lastChecked')
-  // if (!lastChecked) config.set('lastChecked', moment())
-  // if (moment().diff(lastChecked, 'days') < 5) {
-  //   return false
-  // }
-  // config.set('lastChecked', moment())
+  const config = new Configstore('afast')
+  const lastChecked = config.get('lastChecked')
+  if (!lastChecked) config.set('lastChecked', moment())
+  if (moment().diff(lastChecked, 'days') < 1) {
+    return false
+  }
+  config.set('lastChecked', moment())
 
   let result
 
