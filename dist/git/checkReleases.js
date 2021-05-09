@@ -56,7 +56,7 @@ function checkReleases(version, fetch, gitClient, aksForUpdate) {
                     lastChecked = config.get('lastChecked');
                     if (!lastChecked)
                         config.set('lastChecked', moment_1.default());
-                    if (moment_1.default().diff(lastChecked, 'days') < 5) {
+                    if (moment_1.default().diff(lastChecked, 'days') < 1) {
                         return [2 /*return*/, false];
                     }
                     config.set('lastChecked', moment_1.default());
