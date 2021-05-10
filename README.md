@@ -7,7 +7,7 @@ A nodje.js cli to track your time in the Xebia x3/ afas environment. Made as a p
 Not on npm, so:
 
 ```sh
-npm install -g https://github.com/appelstroop/afast
+npm install -g github:appelstroop/afast
 ```
 
 ## Usage
