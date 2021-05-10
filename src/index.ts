@@ -61,7 +61,7 @@ export async function cli(args: string[]) {
   const newVersion = await checkReleases(getVersion())
   if (newVersion)
     console.log(
-      `New update available (version ${newVersion}). See https://github.com/appelstroop/afast`
+      `New update available (version ${newVersion}). npm install -g https://github.com/appelstroop/afast to update  See https://github.com/appelstroop/afast \n\n`
     )
 
   const { email, password, project, hours } = argv
@@ -70,14 +70,10 @@ export async function cli(args: string[]) {
   const login = argv._[0] === 'login'
   try {
     if (login) {
-      console.log('logging in...')
+      console.log('logging in...\n')
       await loginPipe({ email, password })
-      console.log('You are logged in :)')
+      console.log('\nYou are logged in :)')
     } else {
-      // await getCookie()
-
-      // const { id, secure } = await getSecureToken()
-      // if (!id || !secure) console.log('You are not logged in. Use afast login!')
       await hoursPipe({ projectCode: project, hours })
     }
   } catch (err) {

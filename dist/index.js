@@ -93,7 +93,7 @@ function cli(args) {
                 case 1:
                     newVersion = _a.sent();
                     if (newVersion)
-                        console.log("New update available (version " + newVersion + "). See https://github.com/appelstroop/afast");
+                        console.log("New update available (version " + newVersion + "). npm install -g https://github.com/appelstroop/afast to update  See https://github.com/appelstroop/afast \n\n");
                     email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
                     return [4 /*yield*/, getVersion()];
                 case 2:
@@ -103,21 +103,14 @@ function cli(args) {
                 case 3:
                     _a.trys.push([3, 8, , 9]);
                     if (!login) return [3 /*break*/, 5];
-                    console.log('logging in...');
+                    console.log('logging in...\n');
                     return [4 /*yield*/, loginPipe({ email: email, password: password })];
                 case 4:
                     _a.sent();
-                    console.log('You are logged in :)');
+                    console.log('\nYou are logged in :)');
                     return [3 /*break*/, 7];
-                case 5: 
-                // await getCookie()
-                // const { id, secure } = await getSecureToken()
-                // if (!id || !secure) console.log('You are not logged in. Use afast login!')
-                return [4 /*yield*/, hoursPipe({ projectCode: project, hours: hours })];
+                case 5: return [4 /*yield*/, hoursPipe({ projectCode: project, hours: hours })];
                 case 6:
-                    // await getCookie()
-                    // const { id, secure } = await getSecureToken()
-                    // if (!id || !secure) console.log('You are not logged in. Use afast login!')
                     _a.sent();
                     _a.label = 7;
                 case 7: return [3 /*break*/, 9];

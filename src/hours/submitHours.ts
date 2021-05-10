@@ -7,6 +7,8 @@ async function submitHours(data: HoursData) {
   const day = today.getDate()
   const month = new Date().getMonth() + 1
   const year = new Date().getFullYear()
+
+  // just copied this from request data. TODO: format this nicely
   const json = `{\"eventType\":\"update\",\"moment\":{\"day\":${day},\"month\":\"${month}\",\"year\":\"${year}\"},\"user\":{\"id\":\"${id}\",\"secure\":\"${secure}\",\"see\":\"false\"},\"project\":\"${projectCode}\",\"wst\":\"${project.wsts[0].code}\",\"_lines\":[{\"desc\":\"${description}\",\"time\":${hours}}]}`
 
   const updateResponse = await gFetch('https://x3.nodum.io/json/update', {
@@ -19,7 +21,7 @@ async function submitHours(data: HoursData) {
   })
   // Crappy API, seems to always return 200 :(
   if (updateResponse.ok)
-    console.log(`Yeah 🚀 Set ${hours} hours today for ${project.name} `)
+    console.log(`\nYeah 🚀 Set ${hours} hours today for ${project.name} `)
 }
 
 export default submitHours

@@ -1,10 +1,10 @@
 # afast
 
-A cli to track your time in the Xebia x3/ afas environment. I wanted to see if I could mimic the AFAS website in a command line tool, including 2FA. Seems that it works
+A nodje.js cli to track your time in the Xebia x3/ afas environment. Made as a pet project, to see if I could port an existing 2FA auth flow into the command line.
 
-## Installing
+## Instal
 
-Not on NPM so: 
+Not on npm, so:
 
 ```sh
 npm install -g https://github.com/appelstroop/afast
@@ -12,8 +12,20 @@ npm install -g https://github.com/appelstroop/afast
 
 ## Usage
 
-Then:
+To login using 2FA (now only via SMS):
 
 ```sh
 afast login
+```
+
+Then, to track time:
+
+```sh
+afast
+```
+
+or shorter:
+
+```sh
+afast -p [project code] -h [hours]
 ```
