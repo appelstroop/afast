@@ -47,12 +47,12 @@ function getVerificationToken(res) {
                     text = _a.sent();
                     token = node_html_parser_1.parse(text)
                         .querySelector('[name="__RequestVerificationToken"]')
-                        .getAttribute("value");
+                        .getAttribute('value');
                     returnUrl = node_html_parser_1.parse(text)
                         .querySelector('[name="ReturnUrl"]')
-                        .getAttribute("value");
+                        .getAttribute('value');
                     if (!returnUrl || !token)
-                        throw new Error("Tokens could not be found");
+                        throw new Error('Tokens could not be found');
                     return [2 /*return*/, { token: token, returnUrl: returnUrl }];
             }
         });

@@ -43,14 +43,15 @@ var cookieJar_1 = require("../cookieJar");
 var configstore_1 = __importDefault(require("configstore"));
 function storeCookie(res) {
     return __awaiter(this, void 0, void 0, function () {
-        var cookie;
+        var cookie, store;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, cookieJar_1.jar.getCookieString('https://x3.nodum.io')];
                 case 1:
                     cookie = _a.sent();
                     if (cookie) {
-                        new configstore_1.default('afast', { nodum: cookie });
+                        store = new configstore_1.default('afast');
+                        store.set('nodum', cookie);
                     }
                     return [2 /*return*/];
             }

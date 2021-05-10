@@ -55,7 +55,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.aksForUpdate = exports.askForDescription = exports.askForProjectAndHours = exports.askForVerificationToken = exports.askLoginQuestions = void 0;
+exports.askForDescription = exports.askForProjectAndHours = exports.askForVerificationToken = exports.askLoginQuestions = void 0;
 var inquirer_1 = __importDefault(require("inquirer"));
 var askLoginQuestions = function (data) { return __awaiter(void 0, void 0, void 0, function () {
     var questions, answers;
@@ -163,22 +163,4 @@ var askForDescription = function (data) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.askForDescription = askForDescription;
-var aksForUpdate = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var anwsers;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, inquirer_1.default.prompt([
-                    {
-                        name: 'update',
-                        type: 'confirm',
-                        message: 'New version available, would you like to update?',
-                    },
-                ])];
-            case 1:
-                anwsers = _a.sent();
-                return [2 /*return*/, anwsers.update];
-        }
-    });
-}); };
-exports.aksForUpdate = aksForUpdate;
 //# sourceMappingURL=questions.js.map

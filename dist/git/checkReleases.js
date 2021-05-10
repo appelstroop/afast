@@ -41,14 +41,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkReleases = void 0;
 var cookieJar_1 = require("../cookieJar");
-var simple_git_1 = __importDefault(require("simple-git"));
 var compare_versions_1 = __importDefault(require("compare-versions"));
-var questions_1 = require("../questions");
 var configstore_1 = __importDefault(require("configstore"));
 var moment_1 = __importDefault(require("moment"));
-function checkReleases(version, fetch, gitClient, aksForUpdate) {
+function checkReleases(version, fetch) {
     return __awaiter(this, void 0, void 0, function () {
-        var config, lastChecked, result, resp, newestReleaseVersion, isNewer, options, wantsUpdate, git, result_1, err_1;
+        var config, lastChecked, result, resp, newestReleaseVersion, isNewer;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -57,7 +55,7 @@ function checkReleases(version, fetch, gitClient, aksForUpdate) {
                     if (!lastChecked)
                         config.set('lastChecked', moment_1.default());
                     if (moment_1.default().diff(lastChecked, 'days') < 1) {
-                        return [2 /*return*/, false];
+                        return [2 /*return*/];
                     }
                     config.set('lastChecked', moment_1.default());
                     return [4 /*yield*/, fetch('https://api.github.com/repos/appelstroop/afast/releases')];
@@ -68,44 +66,20 @@ function checkReleases(version, fetch, gitClient, aksForUpdate) {
                 case 2:
                     result = _a.sent();
                     return [3 /*break*/, 4];
-                case 3: return [2 /*return*/, false];
+                case 3: return [2 /*return*/];
                 case 4:
                     newestReleaseVersion = result[0] ? result[0].tag_name : '0';
                     isNewer = compare_versions_1.default(newestReleaseVersion, version);
                     if (isNewer < 1)
-                        return [2 /*return*/, false];
-                    options = {
-                        baseDir: process.cwd(),
-                        binary: 'git',
-                        maxConcurrentProcesses: 6,
-                    };
-                    return [4 /*yield*/, aksForUpdate()];
-                case 5:
-                    wantsUpdate = _a.sent();
-                    if (!wantsUpdate)
-                        return [2 /*return*/, false];
-                    git = gitClient(options);
-                    if (!result) return [3 /*break*/, 9];
-                    _a.label = 6;
-                case 6:
-                    _a.trys.push([6, 8, , 9]);
-                    return [4 /*yield*/, git.pull()];
-                case 7:
-                    result_1 = _a.sent();
-                    console.log(result_1);
-                    return [2 /*return*/, true];
-                case 8:
-                    err_1 = _a.sent();
-                    console.log(err_1);
-                    return [3 /*break*/, 9];
-                case 9: return [2 /*return*/, false];
+                        return [2 /*return*/];
+                    return [2 /*return*/, newestReleaseVersion];
             }
         });
     });
 }
 exports.checkReleases = checkReleases;
 var checkReleasesFactory = function (version) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    return [2 /*return*/, checkReleases(version, cookieJar_1.gFetch, simple_git_1.default, questions_1.aksForUpdate)];
+    return [2 /*return*/, checkReleases(version, cookieJar_1.gFetch)];
 }); }); };
 exports.default = checkReleasesFactory;
 //# sourceMappingURL=checkReleases.js.map

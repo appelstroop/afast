@@ -5,7 +5,8 @@ async function storeCookie(res: Response) {
   const cookie = await jar.getCookieString('https://x3.nodum.io')
 
   if (cookie) {
-    new Configstore('afast', { nodum: cookie })
+    const store = new Configstore('afast')
+    store.set('nodum', cookie)
   }
 }
 

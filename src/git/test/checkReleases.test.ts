@@ -8,22 +8,13 @@ describe('GIT', () => {
       json: async () => exampleResponseJson,
       ok: true,
     })
-    const mockPull = jest.fn()
+
     const config = new Configstore('afast')
     config.set('lastChecked', moment().subtract(1, 'days'))
-    const result = await checkReleases(
-      '0.4.0',
-      mockFetch as any,
-      () => ({
-        pull: mockPull,
-      }),
-      askForUpdate
-    )
-    expect(mockPull).toHaveBeenCalled()
+    const result = await checkReleases('0.4.0', mockFetch as any)
+    expect(result).toBe('0.7')
   })
 })
-
-const askForUpdate = async () => true
 
 const exampleResponseJson = [
   {

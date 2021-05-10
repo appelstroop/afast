@@ -58,7 +58,7 @@ function authRequests(data) {
         var afasOnlineResponse, stsAuthorizeResponse, tokens;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, cookieJar_1.gFetch("https://37432.afasinsite.nl/x3/timemanagement")];
+                case 0: return [4 /*yield*/, cookieJar_1.gFetch('https://37432.afasinsite.nl/x3/timemanagement')];
                 case 1:
                     afasOnlineResponse = _a.sent();
                     return [4 /*yield*/, cookieJar_1.gFetch(afasOnlineResponse.url)];

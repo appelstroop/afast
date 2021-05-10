@@ -1,17 +1,10 @@
 import { gFetch } from '../cookieJar'
-import simpleGit, { SimpleGit, SimpleGitOptions } from 'simple-git'
 import fetch from 'node-fetch'
 import compareVersions from 'compare-versions'
-import { aksForUpdate } from '../questions'
 import Configstore from 'configstore'
 import moment from 'moment'
 
-export async function checkReleases(
-  version: string,
-  fetch: typeof gFetch,
-  gitClient: Function,
-  aksForUpdate: () => Promise<boolean>
-) {
+export async function checkReleases(version: string, fetch: typeof gFetch) {
   // TODO: shorten this function
 
   // check if needs upd3ate check ;)
@@ -19,7 +12,7 @@ export async function checkReleases(
   const lastChecked = config.get('lastChecked')
   if (!lastChecked) config.set('lastChecked', moment())
   if (moment().diff(lastChecked, 'days') < 1) {
-    return false
+    return
   }
   config.set('lastChecked', moment())
 
@@ -30,33 +23,16 @@ export async function checkReleases(
   )
 
   if (resp.ok) result = await resp.json()
-  else return false
+  else return
 
   const newestReleaseVersion = result[0] ? result[0].tag_name : '0'
   const isNewer = compareVersions(newestReleaseVersion, version)
-  if (isNewer < 1) return false
-  const options: Partial<SimpleGitOptions> = {
-    baseDir: process.cwd(),
-    binary: 'git',
-    maxConcurrentProcesses: 6,
-  }
+  if (isNewer < 1) return
 
-  const wantsUpdate = await aksForUpdate()
-  if (!wantsUpdate) return false
-  const git: SimpleGit = gitClient(options)
-  if (result) {
-    try {
-      const result = await git.pull()
-      console.log(result)
-      return true
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  return false
+  return newestReleaseVersion
 }
 
 const checkReleasesFactory = async (version: string) =>
-  checkReleases(version, gFetch, simpleGit, aksForUpdate)
+  checkReleases(version, gFetch)
 
 export default checkReleasesFactory
