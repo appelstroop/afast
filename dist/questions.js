@@ -86,9 +86,15 @@ var askLoginQuestions = function (data) { return __awaiter(void 0, void 0, void 
                             default: 'sms',
                             loop: false,
                         },
-                    ]))];
+                    ]))
+                    // for now , dont support pocket app
+                ];
             case 1:
                 answers = _a.sent();
+                // for now , dont support pocket app
+                if (answers.method !== 'sms') {
+                    throw new Error('not supported yet');
+                }
                 return [2 /*return*/, __assign(__assign({}, data), answers)];
         }
     });

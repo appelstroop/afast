@@ -59,11 +59,11 @@ function twoFAMethodRequest(data) {
             switch (_a.label) {
                 case 0:
                     twoFaLocation = data.twoFaLocation, method = data.method;
-                    if (method === "sms") {
-                        toReplace = twoFaLocation.includes("AOLSmartphone")
-                            ? "AOLSmartphone"
-                            : "Smartphone";
-                        twoFaLocation = twoFaLocation.replace(toReplace, "Sms");
+                    if (method === 'sms') {
+                        toReplace = twoFaLocation.includes('AOLSmartphone')
+                            ? 'AOLSmartphone'
+                            : 'Smartphone';
+                        twoFaLocation = twoFaLocation.replace(toReplace, 'Sms');
                     }
                     return [4 /*yield*/, cookieJar_1.gFetch(twoFaLocation)];
                 case 1:

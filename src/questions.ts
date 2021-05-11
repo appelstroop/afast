@@ -29,6 +29,10 @@ export const askLoginQuestions = async (data: LoginData) => {
       loop: false,
     },
   ])
+  // for now , dont support pocket app
+  if (answers.method !== 'sms') {
+    throw new Error('not supported yet')
+  }
   return { ...data, ...answers }
 }
 
