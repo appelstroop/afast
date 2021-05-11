@@ -52,7 +52,7 @@ export const askForProjectAndHours = async (data: HoursData) => {
   if (!data.projectCode) {
     questions.push({
       name: 'projectCode',
-      message: 'Selelect project:',
+      message: 'Select project:',
       type: 'list',
       choices: data.projects!.map((p) => ({
         name: `${p.name} (${p.code}) `,

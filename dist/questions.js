@@ -126,7 +126,7 @@ var askForProjectAndHours = function (data) { return __awaiter(void 0, void 0, v
                 if (!data.projectCode) {
                     questions.push({
                         name: 'projectCode',
-                        message: 'Selelect project:',
+                        message: 'Select project:',
                         type: 'list',
                         choices: data.projects.map(function (p) { return ({
                             name: p.name + " (" + p.code + ") ",
