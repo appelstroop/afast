@@ -61,7 +61,7 @@ export async function cli(args: string[]) {
   const newVersion = await checkReleases(getVersion())
   if (newVersion)
     console.log(
-      `New update available (version ${newVersion}). npm install -g github:appelstroop/afast to update  See https://github.com/appelstroop/afast \n\n`
+      `\nNew update available (version ${newVersion}). "npm install -g github:appelstroop/afast" to update! See https://github.com/appelstroop/afast \n\n`
     )
 
   const { email, password, project, hours } = argv

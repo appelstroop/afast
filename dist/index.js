@@ -93,7 +93,7 @@ function cli(args) {
                 case 1:
                     newVersion = _a.sent();
                     if (newVersion)
-                        console.log("New update available (version " + newVersion + "). npm install -g github:appelstroop/afast to update  See https://github.com/appelstroop/afast \n\n");
+                        console.log("\nNew update available (version " + newVersion + "). \"npm install -g github:appelstroop/afast\" to update! See https://github.com/appelstroop/afast \n\n");
                     email = argv.email, password = argv.password, project = argv.project, hours = argv.hours;
                     return [4 /*yield*/, getVersion()];
                 case 2:
