@@ -1,6 +1,6 @@
 # afast
 
-A nodje.js cli to track your time in the Xebia x3/ afas environment. Made as a pet project, to see if I could port an existing 2FA auth flow into the command line.
+A nodje.js cli to track your time in the Xebia x3/ afas environment. Made as a pet project, to see if I could port an existing 2FA auth flow into the command line, without using an official Afas API or anything.
 
 ## Install
 
