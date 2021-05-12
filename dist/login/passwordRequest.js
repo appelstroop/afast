@@ -55,7 +55,7 @@ function passwordRequest(data) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, email = data.email, token = data.token, password = data.password;
-                    return [4 /*yield*/, cookieJar_1.gFetch('https://idp.afasonline.com/Account/Password', {
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar('https://idp.afasonline.com/Account/Password', {
                             headers: {
                                 'content-type': 'application/x-www-form-urlencoded',
                             },

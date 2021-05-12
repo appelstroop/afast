@@ -79,7 +79,7 @@ function checkReleases(version, fetch) {
 }
 exports.checkReleases = checkReleases;
 var checkReleasesFactory = function (version) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    return [2 /*return*/, checkReleases(version, cookieJar_1.gFetch)];
+    return [2 /*return*/, checkReleases(version, cookieJar_1.fetchCookieJar)];
 }); }); };
 exports.default = checkReleasesFactory;
 //# sourceMappingURL=checkReleases.js.map

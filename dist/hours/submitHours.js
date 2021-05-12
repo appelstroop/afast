@@ -49,7 +49,7 @@ function submitHours(data) {
                     month = new Date().getMonth() + 1;
                     year = new Date().getFullYear();
                     json = "{\"eventType\":\"update\",\"moment\":{\"day\":" + day + ",\"month\":\"" + month + "\",\"year\":\"" + year + "\"},\"user\":{\"id\":\"" + id + "\",\"secure\":\"" + secure + "\",\"see\":\"false\"},\"project\":\"" + projectCode + "\",\"wst\":\"" + project.wsts[0].code + "\",\"_lines\":[{\"desc\":\"" + description + "\",\"time\":" + hours + "}]}";
-                    return [4 /*yield*/, cookieJar_1.gFetch('https://x3.nodum.io/json/update', {
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar('https://x3.nodum.io/json/update', {
                             headers: {
                                 'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV',
                             },

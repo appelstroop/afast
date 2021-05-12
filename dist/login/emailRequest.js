@@ -59,12 +59,12 @@ function emailRequest(data) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, email = data.email, token = data.token;
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://idp.afasonline.com/Account/Email", {
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar('https://idp.afasonline.com/Account/Email', {
                             headers: {
-                                "content-type": "application/x-www-form-urlencoded",
+                                'content-type': 'application/x-www-form-urlencoded',
                             },
                             body: "ReturnUrl=" + encodeURIComponent(returnUrl) + "&Email=" + encodeURIComponent(email) + "&__RequestVerificationToken=" + encodeURIComponent(token),
-                            method: "POST",
+                            method: 'POST',
                         })];
                 case 1:
                     emailResponse = _a.sent();

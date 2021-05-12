@@ -48,17 +48,17 @@ function confirm2FA(data) {
             switch (_a.label) {
                 case 0:
                     returnUrl = data.returnUrl, code = data.code, token = data.token;
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://idp.afasonline.com/Account/Confirm2Factor", {
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar('https://idp.afasonline.com/Account/Confirm2Factor', {
                             headers: {
-                                "content-type": "application/x-www-form-urlencoded",
+                                'content-type': 'application/x-www-form-urlencoded',
                             },
                             body: "EndPointSessionId=&LogonProcessId=&Method=Sms&LoginSessionId=&ReturnUrl=" + encodeURIComponent(returnUrl) + "&TwoFactorKey=&Code=" + code + "&__RequestVerificationToken=" + encodeURIComponent(token) + "&TrustedDevice=false",
-                            method: "POST",
-                            redirect: "manual",
+                            method: 'POST',
+                            redirect: 'manual',
                         })];
                 case 1:
                     postCodeResponse = _a.sent();
-                    return [4 /*yield*/, cookieJar_1.gFetch(postCodeResponse.headers.get("Location"))];
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar(postCodeResponse.headers.get('Location'))];
                 case 2:
                     idp2Response = _a.sent();
                     storeCookie_1.default(idp2Response);

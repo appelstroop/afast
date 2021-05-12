@@ -53,7 +53,7 @@ function getSecureToken(data) {
         var response, text, idMatchGroup, secureMatchGroup, id, secure;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, cookieJar_1.gFetch('https://x3.nodum.io/grid')];
+                case 0: return [4 /*yield*/, cookieJar_1.fetchCookieJar('https://x3.nodum.io/grid')];
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, response.text()];

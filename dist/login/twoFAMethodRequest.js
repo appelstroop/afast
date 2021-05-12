@@ -65,7 +65,7 @@ function twoFAMethodRequest(data) {
                             : 'Smartphone';
                         twoFaLocation = twoFaLocation.replace(toReplace, 'Sms');
                     }
-                    return [4 /*yield*/, cookieJar_1.gFetch(twoFaLocation)];
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar(twoFaLocation)];
                 case 1:
                     sendsmsResponse = _a.sent();
                     return [4 /*yield*/, getVerificationToken_1.default(sendsmsResponse)];

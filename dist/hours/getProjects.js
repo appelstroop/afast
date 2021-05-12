@@ -58,7 +58,7 @@ function getProjects(data) {
                     id = data.id, secure = data.secure;
                     month = new Date().getMonth() + 1;
                     year = new Date().getFullYear();
-                    return [4 /*yield*/, cookieJar_1.gFetch("https://x3.nodum.io/json/geldig?employee=" + id + "&secure=" + secure + "&y=" + year + "&m=" + month)];
+                    return [4 /*yield*/, cookieJar_1.fetchCookieJar("https://x3.nodum.io/json/geldig?employee=" + id + "&secure=" + secure + "&y=" + year + "&m=" + month)];
                 case 1:
                     projectsResponse = _a.sent();
                     return [4 /*yield*/, projectsResponse.json()];
@@ -77,6 +77,9 @@ function getProjects(data) {
     });
 }
 exports.default = getProjects;
+/*
+  Sort projects with billable projects first
+*/
 var sortProjects = function (a, b) {
     return a.billable === b.billable ? 0 : a.billable ? -1 : 1;
 };
