@@ -1,11 +1,11 @@
 import { HoursData, Project, ProjectResponse } from '../types'
-import { gFetch } from '../cookieJar'
+import { fetchCookieJar } from '../cookieJar'
 
 async function getProjects(data: HoursData) {
   const { id, secure } = data
   const month = new Date().getMonth() + 1
   const year = new Date().getFullYear()
-  const projectsResponse = await gFetch(
+  const projectsResponse = await fetchCookieJar(
     `https://x3.nodum.io/json/geldig?employee=${id}&secure=${secure}&y=${year}&m=${month}`
   )
   const projectResponse: ProjectResponse = await projectsResponse.json()
@@ -22,5 +22,8 @@ async function getProjects(data: HoursData) {
 
 export default getProjects
 
+/* 
+  Sort projects with billable projects first
+*/
 export const sortProjects = (a: Project, b: Project) =>
   a.billable === b.billable ? 0 : a.billable ? -1 : 1

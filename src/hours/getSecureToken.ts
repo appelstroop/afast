@@ -1,8 +1,8 @@
-import { gFetch, jar } from '../cookieJar'
+import { fetchCookieJar, jar } from '../cookieJar'
 import { HoursData } from '../types'
 
 async function getSecureToken(data: HoursData) {
-  const response = await gFetch('https://x3.nodum.io/grid')
+  const response = await fetchCookieJar('https://x3.nodum.io/grid')
 
   const text = await response.text()
   const idMatchGroup = text.match(/id *: '(.*)',/)

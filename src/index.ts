@@ -43,7 +43,7 @@ const hoursPipe = asyncPipe(
   submitHours
 )
 
-var argv = yargs(process.argv.slice(2))
+const argv = yargs(process.argv.slice(2))
   .command('login', 'Login to afas (2FA)')
   .alias('E', 'email')
   .alias('P', 'password')

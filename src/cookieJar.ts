@@ -1,8 +1,8 @@
-import nodeFetch from "node-fetch";
-import tough from "tough-cookie";
-const jar = new tough.CookieJar();
+import nodefetchCookieJar from 'node-fetch'
+import tough from 'tough-cookie'
+const jar = new tough.CookieJar()
 
-import fetch from "fetch-cookie/node-fetch";
-const gFetch = fetch(nodeFetch, jar);
+import fetch from 'fetch-cookie/node-fetch'
+const fetchCookieJar = fetch(nodefetchCookieJar, jar)
 
-export { jar, gFetch };
+export { jar, fetchCookieJar }

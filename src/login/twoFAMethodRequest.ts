@@ -1,4 +1,4 @@
-import { gFetch } from '../cookieJar'
+import { fetchCookieJar } from '../cookieJar'
 import { LoginData } from '../types'
 import getVerificationToken from './getVerificationToken'
 
@@ -10,7 +10,7 @@ async function twoFAMethodRequest(data: LoginData) {
       : 'Smartphone'
     twoFaLocation = twoFaLocation!.replace(toReplace, 'Sms')
   }
-  const sendsmsResponse = await gFetch(twoFaLocation!)
+  const sendsmsResponse = await fetchCookieJar(twoFaLocation!)
   const tokens = await getVerificationToken(sendsmsResponse)
   return { ...data, ...tokens }
 }

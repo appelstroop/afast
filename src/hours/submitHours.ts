@@ -1,4 +1,4 @@
-import { gFetch } from '../cookieJar'
+import { fetchCookieJar } from '../cookieJar'
 import { HoursData } from '../types'
 
 async function submitHours(data: HoursData) {
@@ -11,14 +11,17 @@ async function submitHours(data: HoursData) {
   // just copied this from request data. TODO: format this nicely
   const json = `{\"eventType\":\"update\",\"moment\":{\"day\":${day},\"month\":\"${month}\",\"year\":\"${year}\"},\"user\":{\"id\":\"${id}\",\"secure\":\"${secure}\",\"see\":\"false\"},\"project\":\"${projectCode}\",\"wst\":\"${project.wsts[0].code}\",\"_lines\":[{\"desc\":\"${description}\",\"time\":${hours}}]}`
 
-  const updateResponse = await gFetch('https://x3.nodum.io/json/update', {
-    headers: {
-      'content-type':
-        'multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV',
-    },
-    body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
-    method: 'POST',
-  })
+  const updateResponse = await fetchCookieJar(
+    'https://x3.nodum.io/json/update',
+    {
+      headers: {
+        'content-type':
+          'multipart/form-data; boundary=----WebKitFormBoundary98yEVAsfukRofPMV',
+      },
+      body: `------WebKitFormBoundary98yEVAsfukRofPMV\r\nContent-Disposition: form-data; name=\"json\"\r\n\r\n${json}\r\n------WebKitFormBoundary98yEVAsfukRofPMV--\r\n`,
+      method: 'POST',
+    }
+  )
   // Crappy API, seems to always return 200 :(
   if (updateResponse.ok)
     console.log(`\nYeah 🚀 Set ${hours} hours today for ${project.name} `)

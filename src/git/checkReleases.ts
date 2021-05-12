@@ -1,10 +1,13 @@
-import { gFetch } from '../cookieJar'
+import { fetchCookieJar } from '../cookieJar'
 import fetch from 'node-fetch'
 import compareVersions from 'compare-versions'
 import Configstore from 'configstore'
 import moment from 'moment'
 
-export async function checkReleases(version: string, fetch: typeof gFetch) {
+export async function checkReleases(
+  version: string,
+  fetch: typeof fetchCookieJar
+) {
   // TODO: shorten this function
 
   // check if needs upd3ate check ;)
@@ -33,6 +36,6 @@ export async function checkReleases(version: string, fetch: typeof gFetch) {
 }
 
 const checkReleasesFactory = async (version: string) =>
-  checkReleases(version, gFetch)
+  checkReleases(version, fetchCookieJar)
 
 export default checkReleasesFactory

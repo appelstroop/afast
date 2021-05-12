@@ -4,14 +4,14 @@ import moment from 'moment'
 import { checkReleases } from '../checkReleases'
 describe('GIT', () => {
   it('pulls when update available', async () => {
-    const mockFetch = () => ({
+    const mockfetchCookieJar = () => ({
       json: async () => exampleResponseJson,
       ok: true,
     })
 
     const config = new Configstore('afast')
     config.set('lastChecked', moment().subtract(1, 'days'))
-    const result = await checkReleases('0.4.0', mockFetch as any)
+    const result = await checkReleases('0.4.0', mockfetchCookieJar as any)
     expect(result).toBe('0.7')
   })
 })

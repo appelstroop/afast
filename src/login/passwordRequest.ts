@@ -1,9 +1,9 @@
-import { gFetch } from '../cookieJar'
+import { fetchCookieJar } from '../cookieJar'
 import { LoginData } from '../types'
 
 async function passwordRequest(data: LoginData) {
   const { returnUrl, email, token, password } = data
-  const passwordResponse = await gFetch(
+  const passwordResponse = await fetchCookieJar(
     'https://idp.afasonline.com/Account/Password',
     {
       headers: {
