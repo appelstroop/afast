@@ -62,7 +62,7 @@ function submitHours(data) {
                     updateResponse = _a.sent();
                     // Crappy API, seems to always return 200 :(
                     if (updateResponse.ok)
-                        console.log("\nYeah \uD83D\uDE80 Set " + hours + " hours today for " + project.name + " ");
+                        console.log("\nYeah \uD83D\uDE80 Submitted " + hours + " hours today for " + project.name + " ");
                     return [2 /*return*/];
             }
         });

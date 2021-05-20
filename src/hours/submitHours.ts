@@ -24,7 +24,7 @@ async function submitHours(data: HoursData) {
   )
   // Crappy API, seems to always return 200 :(
   if (updateResponse.ok)
-    console.log(`\nYeah 🚀 Set ${hours} hours today for ${project.name} `)
+    console.log(`\nYeah 🚀 Submitted ${hours} hours today for ${project.name} `)
 }
 
 export default submitHours
