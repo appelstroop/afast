@@ -1,5 +1,6 @@
 import { fetchCookieJar } from '../cookieJar'
 import { HoursData } from '../types'
+import chalk from 'chalk'
 
 async function submitHours(data: HoursData) {
   const { id, secure, projectCode, project, hours, description } = data
@@ -24,7 +25,11 @@ async function submitHours(data: HoursData) {
   )
   // Crappy API, seems to always return 200 :(
   if (updateResponse.ok)
-    console.log(`\nYeah 🚀 Submitted ${hours} hours today for ${project.name} `)
+    console.log(
+      `\nYeah 🚀 Submitted ${hours} hours on ${chalk.cyan(
+        project.name
+      )} for today `
+    )
 }
 
 export default submitHours

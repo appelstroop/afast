@@ -35,8 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var cookieJar_1 = require("../cookieJar");
+var chalk_1 = __importDefault(require("chalk"));
 function submitHours(data) {
     return __awaiter(this, void 0, void 0, function () {
         var id, secure, projectCode, project, hours, description, today, day, month, year, json, updateResponse;
@@ -62,7 +66,7 @@ function submitHours(data) {
                     updateResponse = _a.sent();
                     // Crappy API, seems to always return 200 :(
                     if (updateResponse.ok)
-                        console.log("\nYeah \uD83D\uDE80 Submitted " + hours + " hours today for " + project.name + " ");
+                        console.log("\nYeah \uD83D\uDE80 Submitted " + hours + " hours on " + chalk_1.default.cyan(project.name) + " for today ");
                     return [2 /*return*/];
             }
         });
